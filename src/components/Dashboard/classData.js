@@ -1,14 +1,14 @@
-export const classCode = [
-  { id: 1, Standard: "Ist Standard", Code: "PS001" },
-  { id: 2, Standard: "2nd Standard", Code: "PS002" },
-  { id: 3, Standard: "3rd Standard", Code: "PS003" },
-  { id: 4, Standard: "4th Standard", Code: "PS004" },
-  { id: 5, Standard: "5th Standard", Code: "PS005" },
-  { id: 6, Standard: "6th Standard", Code: "PS006" },
-  { id: 7, Standard: "7th Standard", Code: "PS007" },
-  { id: 8, Standard: "8th Standard", Code: "PS008" },
-  { id: 9, Standard: "9th Standard", Code: "PS009" },
-  { id: 10, Standard: "10th Standard", Code: "PS010" },
+export const CLASS_DATA = [
+  { id: 1, label: " Ist ", Code: "PS001" },
+  { id: 2, label: "2nd  ", Code: "PS002" },
+  { id: 3, label: "3rd ", Code: "PS003" },
+  { id: 4, label: "4th ", Code: "PS004" },
+  { id: 5, label: "5th ", Code: "PS005" },
+  { id: 6, label: "6th ", Code: "PS006" },
+  { id: 7, label: "7th ", Code: "PS007" },
+  { id: 8, label: "8th ", Code: "PS008" },
+  { id: 9, label: "9th ", Code: "PS009" },
+  { id: 10, label: "10th ", Code: "PS010" },
 ];
 
 // const handleChange = (e) => {

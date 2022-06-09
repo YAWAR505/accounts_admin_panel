@@ -27,6 +27,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { paths } from "../Routes/paths";
 const usestyles = makeStyles(() => ({
   Signup_Box: {
     width: "100%",
@@ -138,7 +139,7 @@ const Create_Signup = () => {
           timestamp: Timestamp.now(),
         });
         resetForm({ values: "" });
-        navigate("/students");
+        navigate(paths.getStudents());
       } catch (e) {
         Error(e);
       }

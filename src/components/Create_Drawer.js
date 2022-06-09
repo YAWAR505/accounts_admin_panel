@@ -33,15 +33,14 @@ import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
-// console.log(paths, "pathssssss");
 
 const drawerWidth = 240;
 const usestyles = makeStyles(() => ({
   navlink: {
+    padding: "unset",
     textDecoration: "none",
     display: "flex",
     color: "#fff",
-    justifyContent: "center",
     alignItems: "center",
   },
   icons: {
@@ -110,7 +109,7 @@ const Create_Drawer = () => {
     setOpen(false);
   };
 
-  const logout = () => {
+  const signoutHanlder = () => {
     try {
       dispatch(logoutInitiate);
       navigate("/login");
@@ -121,7 +120,7 @@ const Create_Drawer = () => {
     color: "#029904",
   };
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       <AppBar position="fixed" open={open}>
         <Toolbar
           sx={{
@@ -143,8 +142,8 @@ const Create_Drawer = () => {
             </Typography>
             <Button
               variant="contained"
-              className={classes.logoutBtn}
-              onClick={logout}
+              // className={classes.logoutBtn}
+              onClick={signoutHanlder}
             >
               Logout
             </Button>
@@ -152,7 +151,6 @@ const Create_Drawer = () => {
         </Toolbar>
       </AppBar>
       <Drawer
-        // className={classes.icons}
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -179,7 +177,7 @@ const Create_Drawer = () => {
         <Divider />
         <List>
           {Manu.map((manu, index) => (
-            <ListItem button key={manu}>
+            <ListItem button key={index} className={classes.listitem}>
               <NavLink
                 to={manu.path}
                 className={classes.navlink}

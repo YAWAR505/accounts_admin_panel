@@ -1,36 +1,30 @@
-import {
-  Box,
-  Button,
-  Card,
-  Container,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
+import { Box, Card, IconButton, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase";
-import { useDispatch, useSelector } from "react-redux";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useNavigate } from "react-router-dom";
 import { MoreVertRounded } from "@mui/icons-material";
+import { paths } from "../Routes/paths";
 
 const Create_Student = () => {
   const [selected, setSelected] = useState(undefined);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [user, setUser] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const actionMenuOpenHandler = (record) => (e) => {
     setSelected(record);
     setMenuAnchor(e.currentTarget);
   };
   const navigate = useNavigate();
   const addHandler = () => {
-    navigate("/add_user");
+    navigate(paths.getRegisterStudents());
   };
   useEffect(() => {
     const q = query(collection(db, "Students"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const tasks = querySnapshot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(q, (Snapshot) => {
+      const tasks = Snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -38,6 +32,7 @@ const Create_Student = () => {
     });
     return () => unsubscribe();
   }, []);
+
   const columns = [
     {
       name: "U-id",
@@ -67,10 +62,9 @@ const Create_Student = () => {
       name: "Fee Status",
       selector: (row) => (
         <Typography variant="subtitle2" color="primary">
-          Pending
+          Paid
         </Typography>
       ),
-      right: true,
       reorder: false,
     },
     {

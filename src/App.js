@@ -6,21 +6,21 @@ import {
   Route,
   Routes,
   Outlet,
+  useRoutes,
   BrowserRouter as Router,
 } from "react-router-dom";
-import Create_Drawer from "./components/Create_Drawer";
-import ProtectedRoute from "./components/HOC/ProtectedRoute";
-import PublicRoute from "./components/HOC/PublicRoute";
-import { RoutesItems } from "./components/Routes/Routes";
+import { UseRoute } from "./components/Routes/Routes";
 import { auth } from "./firebase";
 import Login from "./Pages/Login";
 import { setUser } from "./redux/Action";
 const App = () => {
-  return (
-    <>
-      <Router>
-        <Routes>
-          {/* <Route path="/" element={<ProtectedRoute />}> */}
+  let element = useRoutes(UseRoute);
+  return element;
+};
+export default App;
+
+{
+  /* <Routes>
           <Route path="/" element={<Create_Drawer />}>
             {RoutesItems.map((route) => (
               <Route
@@ -30,12 +30,6 @@ const App = () => {
               />
             ))}
           </Route>
-          {/* </Route> */}
           <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
-    </>
-  );
-};
-
-export default App;
+        </Routes> */
+}

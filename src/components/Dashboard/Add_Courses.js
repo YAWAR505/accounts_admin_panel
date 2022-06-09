@@ -9,16 +9,18 @@ import {
 import {
   addDoc,
   collection,
-  serverTimestamp,
+  doc,
+  orderBy,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { useFormik } from "formik";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import * as yup from "yup";
 import { db } from "../../firebase";
-import { classCode } from "../Dashboard/classData";
-import { v4 as uuid } from "uuid";
+import { CLASS_DATA } from "../Dashboard/classData";
+import { paths } from "../Routes/paths";
 const usestyles = makeStyles(() => ({
   adduser: {
     width: "100%",
@@ -37,47 +39,54 @@ const usestyles = makeStyles(() => ({
 const Add_Courses = () => {
   const navigate = useNavigate();
   const classes = usestyles();
-  const unique_id = uuid();
-  const [show, setShow] = useState([]);
-  // onChange: (e) => {
-  //   alert("hello ");
-  //   let AllData = classCode.filter((list) => list.id === e.target.value);
-  //   console.log(AllData);
-  //   setShow((oldData) => {
-  //     return {
-  //       ...oldData,
-  //       class: AllData[0]?.class,
-  //       Class_Code: AllData[0]?.Class_Code,
-  //     };
-  //   });
-  // },
+  const [initialValues, setInitialValues] = useState({
+    class: "",
+    AdmissionFee: "",
+    monthelyFee: "",
+    Class_Code: "",
+  });
+  const location = useLocation();
+  const [state] = useState(location.state);
+  const param = useParams();
+  // const { state } = location;
+  // console.log(location, "state");
+  useEffect(() => {
+    setInitialValues({
+      ...formik.values,
+      class: state?.class,
+      AdmissionFee: state?.AdmissionFee,
+      monthelyFee: state?.monthelyFee,
+      Class_Code: state?.Class_Code,
+    });
+  }, [state, param]);
   const formik = useFormik({
-    initialValues: {
-      class: "",
-      AdmitionFee: "",
-      monthelyFee: "",
-      Class_Code: "",
-    },
-
+    enableReinitialize: true,
+    initialValues,
     onSubmit: async (values, { resetForm }) => {
-      // const totalData = values.AdmitionFee + values.monthelyFee * 2;
-      resetForm({ values: "" });
-
       try {
-        await addDoc(collection(db, "addCourse"), {
-          ...values,
-          id: unique_id,
-          timestamp: Timestamp.now(),
-        });
+        state
+          ? await updateDoc(doc(db, "addCourse", param.id), {
+              class: values.class,
+              AdmissionFee: values.AdmissionFee,
+              monthelyFee: values.monthelyFee,
+              Class_Code: values.Class_Code,
+            })
+          : await addDoc(collection(db, "addCourse"), {
+              ...values,
+              timestamp: Timestamp.now(),
+            });
       } catch (e) {
         Error(e);
       }
-      navigate("/courses");
+      navigate(paths.getCourses());
+      resetForm({ values: "" });
     },
   });
   return (
     <Box className={classes.adduser}>
-      <Typography variant="h5"> Add Class</Typography>
+      <Typography variant="h5">
+        {state ? " Edit Class" : "Create Class"}
+      </Typography>
       <form onSubmit={formik.handleSubmit}>
         <TextField
           className={classes.fieldsWidth}
@@ -89,24 +98,24 @@ const Add_Courses = () => {
           margin="normal"
           variant="outlined"
           onChange={formik.handleChange}
-          value={formik.values.coursename}
+          value={formik.values.class}
           // error={formik.touched.coursename && Boolean(formik.errors.coursename)}
           // helperText={formik.touched.coursename && formik.errors.coursename}
         >
-          {classCode.map((code) => (
-            <MenuItem value={code.Standard}>{code.Standard}</MenuItem>
+          {CLASS_DATA.map((code) => (
+            <MenuItem value={code.label}>{code.label}</MenuItem>
           ))}
         </TextField>
         <TextField
-          id="AdmitionFee"
-          name="AdmitionFee"
+          id="AdmissionFee"
+          name="AdmissionFee"
           className={classes.fieldsWidth}
-          label="Admition Fee"
+          label="Admission Fee"
           type="number"
           margin="normal"
           variant="outlined"
           onChange={formik.handleChange}
-          value={formik.values.AdmitionFee}
+          value={formik.values.AdmissionFee}
           // error={formik.touched.totalFee && Boolean(formik.errors.totalFee)}
           // helperText={formik.touched.totalFee && formik.errors.totalFee}
         />
@@ -141,7 +150,7 @@ const Add_Courses = () => {
           // }
           // helperText={formik.touched.semesterFee && formik.errors.semesterFee}
         >
-          {classCode.map((code) => (
+          {CLASS_DATA.map((code) => (
             <MenuItem value={code.Code}>{code.Code}</MenuItem>
           ))}
         </TextField>
@@ -153,7 +162,7 @@ const Add_Courses = () => {
           className={classes.buttons}
           color="primary"
         >
-          Add Class
+          {state ? " Update class" : "Add Class"}
         </Button>
       </form>
     </Box>

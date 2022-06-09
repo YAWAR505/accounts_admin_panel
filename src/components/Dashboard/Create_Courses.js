@@ -1,31 +1,70 @@
-import { Box, Card, IconButton, Typography } from "@material-ui/core";
+import {
+  Box,
+  Card,
+  IconButton,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import { MoreVertRounded } from "@mui/icons-material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../firebase";
-
+import DataTableExtensions from "react-data-table-component-extensions";
+import "react-data-table-component-extensions/dist/index.css";
+import { paths } from "../Routes/paths";
+const useStyles = makeStyles(() => ({
+  title: {
+    zIndex: 999,
+  },
+}));
 const Create_Courses = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [total, setTotal] = useState(null);
-  // console.log(total, "test");
+  const actionEdit = async (id) => {
+    try {
+      const netEditElement = data.find((elemnt) => elemnt.id === id);
+      navigate(paths.getCourseEdit(id), { state: netEditElement });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const actionDelete = async (id) => {
+    await deleteDoc(doc(db, "addCourse", id));
+    const oneIndex = data.filter((val) => val.id !== id);
+    const cloned = [...data];
+    cloned.splice(oneIndex, 1);
+    setData(cloned);
+  };
   useEffect(() => {
-    const q = query(collection(db, "addCourse"));
+    const q = query(collection(db, "addCourse"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const getCourse = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
       setData(getCourse);
     });
     return () => unsubscribe();
   }, []);
 
   const addHandler = () => {
-    navigate("/add_course");
+    navigate(paths.getCourseAdd());
   };
 
   const columns = [
@@ -36,15 +75,19 @@ const Create_Courses = () => {
       reorder: true,
     },
     {
+      name: "Class Code",
+      selector: (row) => row.Class_Code,
+      reorder: true,
+    },
+    {
       name: "Class Name",
       selector: (row) => row.class,
-      sortable: true,
       reorder: true,
     },
 
     {
-      name: "Admition Fee",
-      selector: (row) => row.AdmitionFee,
+      name: "Admission Fee ",
+      selector: (row) => row.AdmissionFee,
       reorder: true,
     },
     {
@@ -53,38 +96,52 @@ const Create_Courses = () => {
       reorder: true,
     },
     {
-      name: "Class Code",
-      selector: (row) => row.Class_Code,
+      name: "Actions",
+      selector: (row) => (
+        <>
+          <IconButton onClick={() => actionEdit(row?.id)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton onClick={() => actionDelete(row?.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
       ignoreRowClick: true,
       allowOverflow: true,
       button: true,
     },
   ];
+  const tableData = {
+    columns,
+    data,
+  };
+
   return (
     <Box>
       <Card>
-        <DataTable
-          title={
-            <div>
-              {"Courses"}
-              {
-                <IconButton
-                  onClick={addHandler}
-                  color="primary"
-                  // id={generateAddButtonId(moduleName)}
-                >
-                  <AddCircleOutlineIcon />
-                </IconButton>
-              }
-            </div>
-          }
-          columns={columns}
-          data={data}
-          defaultSortFieldId={1}
-          striped
-          highlightOnHover
-          pagination
-        />
+        <DataTableExtensions {...tableData} filterPlaceholder={"Search"}>
+          <DataTable
+            title={
+              <Box>
+                {"Courses"}
+                {
+                  <IconButton onClick={addHandler} color="primary">
+                    <AddCircleOutlineIcon />
+                  </IconButton>
+                }
+              </Box>
+            }
+            fixedHeader
+            columns={columns}
+            data={data}
+            defaultSortField="id"
+            defaultSortAsc={false}
+            striped
+            highlightOnHover
+            pagination
+          />
+        </DataTableExtensions>
       </Card>
     </Box>
   );
