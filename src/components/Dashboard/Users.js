@@ -17,6 +17,7 @@ import {
 import { useDispatch } from "react-redux";
 import { hanldSignup } from "../../redux/Action";
 import { Navigate, useNavigate } from "react-router-dom";
+import { paths } from "../Routes/paths";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,7 +82,6 @@ const Users = () => {
           try {
             dispatch(hanldSignup(values.email, values.password, values));
             resetForm({ values: "" });
-            navigate("/user_list");
           } catch (e) {
             Error(e);
           }

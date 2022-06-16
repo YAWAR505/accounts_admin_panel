@@ -1,5 +1,5 @@
 export const CLASS_DATA = [
-  { id: 1, label: " Ist ", Code: "PS001" },
+  { id: 1, label: " 1st ", Code: "PS001" },
   { id: 2, label: "2nd  ", Code: "PS002" },
   { id: 3, label: "3rd ", Code: "PS003" },
   { id: 4, label: "4th ", Code: "PS004" },

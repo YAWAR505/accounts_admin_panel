@@ -8,7 +8,11 @@ import Users from "../Dashboard/Users";
 import UsersList from "../Dashboard/UsersList";
 import Transactions from "../Dashboard/Transactions";
 import Create_Drawer from "../Create_Drawer";
+import Login from "../../Pages/Login";
 import { paths } from "./paths";
+import { Navigate, Outlet } from "react-router-dom";
+import { auth } from "../../firebase";
+import { useSelector } from "react-redux";
 
 export const UseRoute = [
   {
@@ -21,53 +25,17 @@ export const UseRoute = [
       { path: paths.getCourseEdit(":id"), element: <AddCourses /> },
       { path: paths.getStudents(), element: <Student /> },
       { path: paths.getRegisterStudents(), element: <Register /> },
+      { path: paths.getRegisterStudentsEdit(":id"), element: <Register /> },
       { path: paths.getPayFee(), element: <PayFee /> },
       { path: paths.getUsers(), element: <Users /> },
-      // { path: paths.getUsersList(), element: <UsersList /> },
+      { path: paths.getUsersList(), element: <UsersList /> },
+
       { path: paths.getTransactions(), element: <Transactions /> },
     ],
   },
-];
 
-// export const RoutesItems = [
-//   {
-//     path: paths.COURSES,
-//     component: Courses,
-//   },
-//   {
-//     path: paths.STUDENTS,
-//     component: Student,
-//   },
-//   {
-//     path: paths.ADD_USER,
-//     component: Signup,
-//   },
-//   {
-//     path: paths.ADD_COURSE,
-//     component: AddCourses,
-//   },
-//   {
-//     path: paths.EDIT_COURSE,
-//     component: AddCourses,
-//   },
-//   {
-//     path: paths.DASHBOARD,
-//     component: Charts,
-//   },
-//   {
-//     path: paths.PAY_FEE,
-//     component: PayFee,
-//   },
-//   {
-//     path: paths.USERS,
-//     component: Users,
-//   },
-//   {
-//     path: paths.USER_LIST,
-//     component: UsersList,
-//   },
-//   {
-//     path: paths.TRANSACTIONS,
-//     component: Transactions,
-//   },
-// ];
+  {
+    path: paths.getLogin(),
+    element: <Login />,
+  },
+];

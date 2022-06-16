@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
@@ -15,8 +14,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+
 import {
   Link,
   Navigate,
@@ -26,18 +24,15 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import { paths, RoutesItems } from "./Routes/Routes";
 import Manu from "./Manu-items/Manu_Items";
 import { Button, makeStyles } from "@material-ui/core";
-import { auth } from "../firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
+import { paths } from "./Routes/paths";
 
 const drawerWidth = 240;
 const usestyles = makeStyles(() => ({
   navlink: {
-    padding: "unset",
     textDecoration: "none",
     display: "flex",
     color: "#fff",
@@ -46,10 +41,15 @@ const usestyles = makeStyles(() => ({
   icons: {
     color: "green",
   },
+  main: {
+    backgroundColor: "#d1d7d1",
+    height: "100vh",
+  },
 }));
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
+
     padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
@@ -112,7 +112,7 @@ const Create_Drawer = () => {
   const signoutHanlder = () => {
     try {
       dispatch(logoutInitiate);
-      navigate("/login");
+      navigate(paths.getLogin());
     } catch (error) {}
   };
 
@@ -120,7 +120,7 @@ const Create_Drawer = () => {
     color: "#029904",
   };
   return (
-    <Box>
+    <Box sx={{ display: "flex" }}>
       <AppBar position="fixed" open={open}>
         <Toolbar
           sx={{
@@ -128,13 +128,12 @@ const Create_Drawer = () => {
           }}
         >
           <IconButton
-            color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
+            sx={{ mr: 2, ...(open && { display: "none" }), color: "#029904" }}
           >
-            <MenuIcon />
+            <ChevronRightIcon />
           </IconButton>
           <Box display="flex" justifyContent="space-between" width="100%">
             <Typography variant="h6" noWrap component="div">
@@ -142,7 +141,7 @@ const Create_Drawer = () => {
             </Typography>
             <Button
               variant="contained"
-              // className={classes.logoutBtn}
+              className={classes.logoutBtn}
               onClick={signoutHanlder}
             >
               Logout
@@ -167,11 +166,7 @@ const Create_Drawer = () => {
         <Divider />
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose} sx={{ color: "#029904" }}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
+            <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -196,7 +191,7 @@ const Create_Drawer = () => {
         </List>
         <Divider sx={{ backgroundColor: "#c6c6c6" }} />
       </Drawer>
-      <Main open={open}>
+      <Main open={open} className={classes.main}>
         <DrawerHeader />
         <Outlet />
       </Main>

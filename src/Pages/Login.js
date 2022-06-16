@@ -13,6 +13,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { signinInitiate } from "../redux/Action";
+import { paths } from "../components/Routes/paths";
 const usestyles = makeStyles(() => ({
   login: {
     width: "100%",
@@ -54,9 +55,9 @@ const Login = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        dispatch(signinInitiate(values.email, values.password));
-        navigate("/dashboard");
         toast.dark("Login Successful");
+        dispatch(signinInitiate(values.email, values.password));
+        navigate(paths.getRoot());
       } catch (e) {
         if (e.code === "auth/wrong-password") {
           toast.error("Please check the Password");

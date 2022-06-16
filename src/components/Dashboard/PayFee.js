@@ -28,7 +28,7 @@ import { MONTHS } from "../Constants/months";
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
-    height: "100%",
+
     width: "100%",
   },
   actions: {
@@ -64,6 +64,7 @@ const PayFee = () => {
   const [isverify, setIsVerify] = useState(false);
   const [isMonth, setIsMonth] = useState(false);
   const [transactions, setTransactions] = useState([]);
+  const [saveData, setsaveData] = useState([]);
   useEffect(() => {
     const q = query(collection(db, "Users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -120,7 +121,7 @@ const PayFee = () => {
       let i = 0;
       await addDoc(collection(db, "PayFee"), {
         ...values,
-        user_id: i++,
+        user_id: saveData.length,
         timestamp: Timestamp.now(),
       });
       setIsVerify(false);
@@ -157,6 +158,7 @@ const PayFee = () => {
         id: doc.id,
         ...doc.data(),
       }));
+      setsaveData(Transactions);
       const filtedTransaction = Transactions.filter(
         (item) => item.studentName === formik.values.studentName
       );
@@ -292,7 +294,7 @@ const PayFee = () => {
                     switch (targetValue) {
                       case FEE_TYPE_ADMISSION:
                         setIsMonth(false);
-                        amount = course.AdmitionFee;
+                        amount = course.AdmissionFee;
                         break;
                       case FEE_TYPE_MONTHLY_FEE:
                         setIsMonth(true);

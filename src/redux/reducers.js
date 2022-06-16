@@ -3,7 +3,6 @@ const initialState = {
   loading: false,
   currentAdmin: null,
   error: null,
-  requestsList: [],
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -20,13 +19,6 @@ const reducer = (state = initialState, action) => {
         loading: true,
         error: action.payload,
       };
-
-    // case types.SET_USER:
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     currentAdmin: action.payload,
-    //   };
 
     case types.LOGOUT_END:
       return {

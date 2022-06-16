@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
+console.log(auth.currentUser, "auth.currentUser");
 
 const signinSuccess = (admin) => ({
   type: types.SIGNIN_SUCCESS,
@@ -20,6 +21,9 @@ const signinFail = (error) => ({
 
 export const signinInitiate = (email, password) => async (dispatch) => {
   const user = await signInWithEmailAndPassword(auth, email, password);
+  const { accessToken } = user.user;
+
+  localStorage.setItem("token", JSON.stringify(accessToken));
   try {
     dispatch(signinSuccess(user));
   } catch (error) {

@@ -1,15 +1,57 @@
-import { Box, Button, Card, IconButton, Typography } from "@material-ui/core";
-import { MoreVertRounded } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  IconButton,
+  makeStyles,
+  Paper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
+import { MoreVertRounded, Search } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase";
-
+import RangePicker from "react-range-picker";
+import moment from "moment";
+import { CSVLink } from "react-csv";
+import { DateRangePickerComponent } from "@syncfusion/ej2-react-calendars";
+const useStyles = makeStyles(() => ({
+  daterange: {
+    textAlign: "center",
+  },
+  csvFile: {
+    width: "15%",
+    textDecoration: "none",
+    display: "flex",
+    justifyContent: " space-around",
+    color: "#fff",
+    marginTop: "10px",
+    backgroundColor: "blue",
+    padding: "10px 0",
+    borderRadius: "5px",
+  },
+  csvFileParent: {
+    display: "flex",
+    justifyContent: "space-between",
+    width: "99%",
+  },
+  typo: {
+    marginLeft: "10px",
+  },
+  search: {
+    marginTop: "10px",
+  },
+}));
 const Transactions = () => {
+  const classes = useStyles();
   const [selected, setSelected] = useState(undefined);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [FilteredData, setFilteredData] = useState([]);
+  const [q, setQ] = useState("");
   const actionMenuOpenHandler = (record) => (e) => {
     setSelected(record);
     setMenuAnchor(e.currentTarget);
@@ -21,14 +63,16 @@ const Transactions = () => {
         id: doc.id,
         ...doc.data(),
       }));
+
       setTransactions(Transactions);
     });
     return () => unsubscribe();
   }, []);
+
   const columns = [
     {
       name: "U-id",
-      selector: (row) => row.id,
+      selector: (row) => row.user_id,
       sortable: true,
       reorder: false,
     },
@@ -64,31 +108,63 @@ const Transactions = () => {
       button: true,
     },
     {
-      name: "Actions",
-      cell: (record) => (
-        <IconButton onClick={actionMenuOpenHandler(record)}>
-          <MoreVertRounded />
-        </IconButton>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+      name: "paid On",
+      selector: (row) =>
+        moment(row.timestamp.seconds * 1000).format(" MMMM-DD- YY hh:mm a"),
+
+      reorder: false,
     },
   ];
+
+  const handleSearch = (e) => {
+    setQ(e.target.value);
+  };
+  useEffect(() => {
+    const value = transactions.filter((item) =>
+      item.studentName.toLowerCase().includes(q)
+    );
+    setFilteredData(value);
+  }, [q, transactions]);
+
   return (
-    <Box>
-      <Card>
-        <DataTable
-          title={"Transactions"}
-          columns={columns}
+    <Paper elevation={2}>
+      <div className={classes.csvFileParent}>
+        <Box display="flex" alignItems="center" className={classes.typo}>
+          <Typography variant="h5"> Transactions </Typography>
+          {/* <IconButton onClick={addHandler} color="primary">
+            <AddCircleOutlineIcon />
+          </IconButton> */}
+        </Box>
+
+        <CSVLink
           data={transactions}
-          striped
-          highlightOnHover
-          defaultSortFieldId={1}
-          pagination
-        />
-      </Card>
-    </Box>
+          filename="students.csv"
+          target="_blank"
+          className={classes.csvFile}
+        >
+          Export CSV
+        </CSVLink>
+      </div>
+      <DataTable
+        actions={
+          <Box className={classes.search}>
+            {/* <RangePicker onDateChanges={onDateChanges} /> */}
+            <TextField
+              label="Search"
+              variant="outlined"
+              value={q}
+              onChange={handleSearch}
+            />
+          </Box>
+        }
+        columns={columns}
+        data={FilteredData}
+        striped
+        highlightOnHover
+        defaultSortFieldId={1}
+        pagination
+      />
+    </Paper>
   );
 };
 export default Transactions;

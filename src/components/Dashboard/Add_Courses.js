@@ -10,7 +10,9 @@ import {
   addDoc,
   collection,
   doc,
+  onSnapshot,
   orderBy,
+  query,
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -21,6 +23,8 @@ import * as yup from "yup";
 import { db } from "../../firebase";
 import { CLASS_DATA } from "../Dashboard/classData";
 import { paths } from "../Routes/paths";
+import { toast, ToastContainer } from "react-toastify";
+
 const usestyles = makeStyles(() => ({
   adduser: {
     width: "100%",
@@ -39,6 +43,7 @@ const usestyles = makeStyles(() => ({
 const Add_Courses = () => {
   const navigate = useNavigate();
   const classes = usestyles();
+  const [Course, setCourse] = useState([]);
   const [initialValues, setInitialValues] = useState({
     class: "",
     AdmissionFee: "",
@@ -48,8 +53,7 @@ const Add_Courses = () => {
   const location = useLocation();
   const [state] = useState(location.state);
   const param = useParams();
-  // const { state } = location;
-  // console.log(location, "state");
+
   useEffect(() => {
     setInitialValues({
       ...formik.values,
@@ -59,11 +63,27 @@ const Add_Courses = () => {
       Class_Code: state?.Class_Code,
     });
   }, [state, param]);
+  useEffect(() => {
+    const q = query(collection(db, "addCourse"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tasks = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCourse(tasks);
+    });
+    return () => unsubscribe();
+  }, []);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues,
     onSubmit: async (values, { resetForm }) => {
+      const year = new Date().getFullYear();
       try {
+        toast.dark(
+          state ? "Class Updated Successful" : " Class Added Successful"
+        );
+
         state
           ? await updateDoc(doc(db, "addCourse", param.id), {
               class: values.class,
@@ -73,6 +93,7 @@ const Add_Courses = () => {
             })
           : await addDoc(collection(db, "addCourse"), {
               ...values,
+              s_id: Course.length,
               timestamp: Timestamp.now(),
             });
       } catch (e) {
@@ -84,6 +105,7 @@ const Add_Courses = () => {
   });
   return (
     <Box className={classes.adduser}>
+      <ToastContainer />
       <Typography variant="h5">
         {state ? " Edit Class" : "Create Class"}
       </Typography>

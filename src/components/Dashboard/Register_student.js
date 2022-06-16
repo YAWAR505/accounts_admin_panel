@@ -2,7 +2,11 @@ import {
   Box,
   Button,
   Card,
+  CardContent,
+  CardHeader,
+  Grid,
   ListItem,
+  ListItemText,
   makeStyles,
   MenuItem,
   Select,
@@ -19,15 +23,18 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
   Timestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { paths } from "../Routes/paths";
+import moment from "moment";
 const usestyles = makeStyles(() => ({
   Signup_Box: {
     width: "100%",
@@ -48,26 +55,28 @@ const usestyles = makeStyles(() => ({
 }));
 
 const Gender = [{ label: "Male" }, { label: "Female" }];
-var oneThousandroll = 1000;
-var twoThousandroll = 2000;
-var threeThousandroll = 3000;
-var fourThousandroll = 4000;
-var fiveThousandroll = 5000;
-var sixThousandroll = 6000;
-var sevenThousandroll = 7000;
-var eightThousandroll = 8000;
-var NineThousandroll = 9000;
-var tenThousandroll = 10000;
 const Create_Signup = () => {
   const classes = usestyles();
-  const dispatch = useDispatch();
   const [course, setCourse] = useState([]);
   const [users, setUsers] = useState([]);
   const [students, setStudents] = useState([]);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const [setusersData, setUsersData] = useState([]);
+  const [state] = useState(location.state);
+  const param = useParams();
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    ClassName: "",
+  });
   const validationSchema = yup.object({});
-
+  useEffect(() => {
+    setInitialValues({
+      ...formik.values,
+      name: state?.name,
+      ClassName: state?.ClassName,
+    });
+  }, [state, param]);
   useEffect(() => {
     const q = query(collection(db, "addCourse"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -105,39 +114,32 @@ const Create_Signup = () => {
     return () => unsubscribe();
   }, []);
 
+  console.log(students);
   const formik = useFormik({
-    initialValues: {
-      name: "",
-      ClassName: "",
-    },
+    enableReinitialize: true,
+    initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values, { resetForm }) => {
+      const studentRef = collection(db, "Students");
+      const qroll = query(
+        studentRef,
+        where("ClassName", "==", values.ClassName)
+      );
+      const querySnap = await getDocs(qroll);
+      const year = new Date().getYear();
       try {
-        await addDoc(collection(db, "Students"), {
-          ...values,
-          rollNo:
-            values.ClassName === "Ist Standard"
-              ? oneThousandroll++
-              : values.ClassName === "2nd Standard"
-              ? twoThousandroll++
-              : values.ClassName === "3rd Standard"
-              ? threeThousandroll++
-              : values.ClassName === "4th Standard"
-              ? fourThousandroll++
-              : values.ClassName === "5th Standard"
-              ? fiveThousandroll++
-              : values.ClassName === "6th Standard"
-              ? sixThousandroll++
-              : values.ClassName === "7th Standard"
-              ? sevenThousandroll++
-              : values.ClassName === "8th Standard"
-              ? eightThousandroll++
-              : values.ClassName === "9th Standard"
-              ? NineThousandroll++
-              : tenThousandroll++,
-          user_id: students.length,
-          timestamp: Timestamp.now(),
-        });
+        state
+          ? await updateDoc(doc(db, "Students", param.id), {
+              name: values.name,
+              ClassName: values.ClassName,
+            })
+          : await addDoc(collection(db, "Students"), {
+              ...values,
+              rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
+              S_id: "PS" + year + parseInt(values.ClassName) + querySnap.size,
+              user_id: students.length,
+              timestamp: Timestamp.now(),
+            });
         resetForm({ values: "" });
         navigate(paths.getStudents());
       } catch (e) {
@@ -145,12 +147,17 @@ const Create_Signup = () => {
       }
     },
   });
-
+  useEffect(() => {
+    const FilteredUsers = users.filter(
+      (item) => item.name === formik.values.name
+    );
+    setUsersData(FilteredUsers);
+  }, [formik.values.name, users]);
   return (
     <>
       <Box className={classes.Signup_Box}>
         <Typography variant="h5" className={classes.signup_typo}>
-          Register Student
+          {state ? "Edit Student " : "Register Student "}
         </Typography>
         <form onSubmit={formik.handleSubmit}>
           <Box className={classes.formbox}>
@@ -169,7 +176,12 @@ const Create_Signup = () => {
               // helperText={formik.touched.name && formik.errors.name}
             >
               {users.map((course) => (
-                <MenuItem value={course.name}>{course.name}</MenuItem>
+                <MenuItem
+                  value={course.name}
+                  disabled={students.some((item) => item.name === course.name)}
+                >
+                  {course.name}
+                </MenuItem>
               ))}
             </TextField>
 
@@ -191,15 +203,46 @@ const Create_Signup = () => {
                 <MenuItem value={course.class}>{course.class}</MenuItem>
               ))}
             </TextField>
-            {/* {users.map((item) => (
-              <Box>
-                <Card>
-                  <ListItem>Name: {item.name}</ListItem>
-                  <ListItem>Email: {item.email}</ListItem>
-                  <ListItem>role: {item.role} </ListItem>
-                </Card>
-              </Box>
-            ))} */}
+            {setusersData.map((item) => (
+              <CardContent>
+                <CardHeader title="Student Details" />
+                <Grid container spacing={2}>
+                  <Grid item md={6} xs={12}>
+                    <ListItem>
+                      <ListItemText> Name:- </ListItemText>
+                      <ListItemText> {item.name} </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText> Email:- </ListItemText>
+                      <ListItemText> {item.email} </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>Role:- </ListItemText>
+                      <ListItemText>{item.role} </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>Address:- </ListItemText>
+                      <ListItemText>{item.userDetails.Address} </ListItemText>
+                    </ListItem>
+                  </Grid>
+                  <Grid item md={6} xs={12}>
+                    <ListItem>
+                      <ListItemText>Phone Number:- </ListItemText>
+                      <ListItemText>
+                        {item.userDetails.PhoneNumber}{" "}
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>Father Name:- </ListItemText>
+                      <ListItemText>
+                        {item.userDetails.fatherName}{" "}
+                      </ListItemText>
+                    </ListItem>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            ))}
+
             <Box
               sx={{
                 marginTop: "50px",
@@ -212,7 +255,7 @@ const Create_Signup = () => {
                 color="primary"
                 size="large"
               >
-                Register
+                {state ? "update" : "Register"}
               </Button>
             </Box>
           </Box>
