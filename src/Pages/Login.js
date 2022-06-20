@@ -37,6 +37,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const validationSchema = yup.object({
     email: yup
       .string("Enter your email")
@@ -53,18 +54,11 @@ const Login = () => {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       try {
-        toast.dark("Login Successful");
         dispatch(signinInitiate(values.email, values.password));
-        navigate(paths.getRoot());
       } catch (e) {
-        if (e.code === "auth/wrong-password") {
-          toast.error("Please check the Password");
-        }
-        if (e.code === "auth/user-not-found") {
-          toast.error("Please check the Email");
-        }
+        toast.error("Please check the Password" + e.message);
       }
     },
   });

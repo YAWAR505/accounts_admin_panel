@@ -70,6 +70,7 @@ const Create_Signup = () => {
     ClassName: "",
   });
   const validationSchema = yup.object({});
+
   useEffect(() => {
     setInitialValues({
       ...formik.values,
@@ -113,7 +114,9 @@ const Create_Signup = () => {
     });
     return () => unsubscribe();
   }, []);
-
+  function addLeadingZeros(num, totalLength) {
+    return String(num).padStart(totalLength, "0");
+  }
   console.log(students);
   const formik = useFormik({
     enableReinitialize: true,
@@ -126,7 +129,9 @@ const Create_Signup = () => {
         where("ClassName", "==", values.ClassName)
       );
       const querySnap = await getDocs(qroll);
-      const year = new Date().getYear();
+      const year = new Date().getFullYear();
+      const short = year.toString().slice(-2);
+      console.log(short);
       try {
         state
           ? await updateDoc(doc(db, "Students", param.id), {
@@ -136,7 +141,8 @@ const Create_Signup = () => {
           : await addDoc(collection(db, "Students"), {
               ...values,
               rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
-              S_id: "PS" + year + parseInt(values.ClassName) + querySnap.size,
+              S_id: `PS${short}${addLeadingZeros(students.length, 2)}`,
+
               user_id: students.length,
               timestamp: Timestamp.now(),
             });
@@ -266,7 +272,3 @@ const Create_Signup = () => {
 };
 
 export default Create_Signup;
-
-// const arr = [1, 2, 3, 4];
-// const new_arr = arr.map((a) => a++);
-// console.log(new_arr);

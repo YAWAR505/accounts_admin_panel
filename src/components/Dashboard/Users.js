@@ -13,12 +13,20 @@ import {
   Grid,
   TextField,
   Button,
+  MenuItem,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { hanldSignup } from "../../redux/Action";
 import { Navigate, useNavigate } from "react-router-dom";
 import { paths } from "../Routes/paths";
-
+const ROLL_TYPE = [
+  {
+    label: "Student",
+  },
+  {
+    label: "Admin",
+  },
+];
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
@@ -34,9 +42,11 @@ const Users = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const initialValues = {
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
-    name: "",
+    confirmPassword: "",
     role: "",
     userDetails: {
       fatherName: "",
@@ -50,13 +60,13 @@ const Users = () => {
     <Card className={clsx(classes.root)}>
       <CardHeader title="Register User" />
       <Divider />
-
       <Formik
         initialValues={{
           ...initialValues,
         }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().required("Name is required"),
+          firstName: Yup.string().required("Name is required"),
+          lastName: Yup.string().required("Name is required"),
           email: Yup.string()
             .email("Please enter a valid email")
             .required("Email is required"),
@@ -67,16 +77,15 @@ const Users = () => {
               /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
               "Password must contain 8 characters, one uppercase, one lowercase, one number and one special case Character"
             ),
+          confirmPassword: Yup.string()
+            .required("Please enter the password again")
+            .oneOf([Yup.ref("password"), null], "Passwords didn't match"),
           userDetails: Yup.object().shape({
             fatherName: Yup.string().required("Father Name is required"),
             motherName: Yup.string().required("Mother Name  is required"),
             PhoneNumber: Yup.string().required("Phone Number  is required"),
             Address: Yup.string().required("Mother Name  is required"),
           }),
-
-          //   confirmPassword: Yup.string()
-          //     .required("Please enter the password again")
-          //     .oneOf([Yup.ref("password"), null], "Passwords didn't match"),
         })}
         onSubmit={(values, { resetForm }) => {
           try {
@@ -101,6 +110,59 @@ const Users = () => {
           <form autoComplete="off" noValidate onSubmit={handleSubmit}>
             <CardContent>
               <Grid container spacing={2}>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    error={Boolean(touched.firstName && errors.firstName)}
+                    fullWidth
+                    required
+                    helperText={touched.firstName && errors.firstName}
+                    label="First Name"
+                    name="firstName"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.firstName}
+                    variant="outlined"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    error={Boolean(touched.lastName && errors.lastName)}
+                    fullWidth
+                    required
+                    helperText={touched.lastName && errors.lastName}
+                    label="Last Name"
+                    name="lastName"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.lastName}
+                    variant="outlined"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    error={Boolean(touched.role && errors.role)}
+                    fullWidth
+                    required
+                    helperText={touched.role && errors.role}
+                    label="Role"
+                    name="role"
+                    select
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.role}
+                    variant="outlined"
+                    size="small"
+                  >
+                    {ROLL_TYPE.map((item) => (
+                      <MenuItem value={item.label}>{item.label}</MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.email && errors.email)}
@@ -135,33 +197,20 @@ const Users = () => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.name && errors.name)}
+                    error={Boolean(
+                      touched.confirmPassword && errors.confirmPassword
+                    )}
                     fullWidth
                     required
-                    helperText={touched.name && errors.name}
-                    label="Name"
-                    name="name"
+                    helperText={
+                      touched.confirmPassword && errors.confirmPassword
+                    }
+                    label="Confirm Password"
+                    name="confirmPassword"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="text"
-                    value={values.name}
-                    variant="outlined"
-                    size="small"
-                  />
-                </Grid>
-
-                <Grid item md={6} xs={12}>
-                  <TextField
-                    error={Boolean(touched.role && errors.role)}
-                    fullWidth
-                    required
-                    helperText={touched.role && errors.role}
-                    label="Role"
-                    name="role"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
-                    value={values.role}
+                    type="password"
+                    value={values.confirmPassword}
                     variant="outlined"
                     size="small"
                   />
@@ -206,7 +255,7 @@ const Users = () => {
                       getIn(touched, "userDetails.motherName") &&
                       getIn(errors, "userDetails.motherName")
                     }
-                    label="motherName"
+                    label="Mother Name"
                     name="userDetails.motherName"
                     onBlur={handleBlur}
                     onChange={handleChange}

@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { paths } from "../components/Routes/paths";
 console.log(auth.currentUser, "auth.currentUser");
 
 const signinSuccess = (admin) => ({
@@ -21,9 +22,7 @@ const signinFail = (error) => ({
 
 export const signinInitiate = (email, password) => async (dispatch) => {
   const user = await signInWithEmailAndPassword(auth, email, password);
-  const { accessToken } = user.user;
 
-  localStorage.setItem("token", JSON.stringify(accessToken));
   try {
     dispatch(signinSuccess(user));
   } catch (error) {
@@ -47,7 +46,6 @@ export const hanldSignup = (email, password, values) => async (dispatch) => {
     uid: uid,
     timestamp: Timestamp.now(),
   });
-
   dispatch({
     type: types.SIGNUP_SUCCESS,
     payload: data,

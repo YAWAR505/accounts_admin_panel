@@ -3,6 +3,7 @@ const initialState = {
   loading: false,
   currentAdmin: null,
   error: null,
+  requestsList: [],
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -24,7 +25,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        currentAdmin: null,
+        currentAdmin: action.payload,
       };
     case types.SIGNUP_SUCCESS:
       return {

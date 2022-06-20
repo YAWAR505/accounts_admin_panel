@@ -10,14 +10,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import { MoreVertRounded, Search } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase";
 import RangePicker from "react-range-picker";
 import moment from "moment";
 import { CSVLink } from "react-csv";
-import { DateRangePickerComponent } from "@syncfusion/ej2-react-calendars";
+import TransactionPdf from "./TransactionPdf";
+
 const useStyles = makeStyles(() => ({
   daterange: {
     textAlign: "center",
@@ -52,10 +53,7 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
   const [q, setQ] = useState("");
-  const actionMenuOpenHandler = (record) => (e) => {
-    setSelected(record);
-    setMenuAnchor(e.currentTarget);
-  };
+  const pdfRef = useRef(null);
   useEffect(() => {
     const q = query(collection(db, "PayFee"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -63,7 +61,6 @@ const Transactions = () => {
         id: doc.id,
         ...doc.data(),
       }));
-
       setTransactions(Transactions);
     });
     return () => unsubscribe();
@@ -71,12 +68,11 @@ const Transactions = () => {
 
   const columns = [
     {
-      name: "U-id",
+      name: "S.No",
       selector: (row) => row.user_id,
       sortable: true,
       reorder: false,
     },
-
     {
       name: "Name",
       selector: (row) => row.studentName,
@@ -108,7 +104,12 @@ const Transactions = () => {
       button: true,
     },
     {
-      name: "paid On",
+      name: "Pdf",
+      selector: (row) => <TransactionPdf row={row} />,
+      button: true,
+    },
+    {
+      name: "Paid On",
       selector: (row) =>
         moment(row.timestamp.seconds * 1000).format(" MMMM-DD- YY hh:mm a"),
 
@@ -131,11 +132,7 @@ const Transactions = () => {
       <div className={classes.csvFileParent}>
         <Box display="flex" alignItems="center" className={classes.typo}>
           <Typography variant="h5"> Transactions </Typography>
-          {/* <IconButton onClick={addHandler} color="primary">
-            <AddCircleOutlineIcon />
-          </IconButton> */}
         </Box>
-
         <CSVLink
           data={transactions}
           filename="students.csv"
@@ -148,7 +145,6 @@ const Transactions = () => {
       <DataTable
         actions={
           <Box className={classes.search}>
-            {/* <RangePicker onDateChanges={onDateChanges} /> */}
             <TextField
               label="Search"
               variant="outlined"
@@ -164,6 +160,7 @@ const Transactions = () => {
         defaultSortFieldId={1}
         pagination
       />
+      {/* <TransactionPdf /> */}
     </Paper>
   );
 };

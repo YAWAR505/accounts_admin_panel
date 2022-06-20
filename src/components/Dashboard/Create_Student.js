@@ -95,7 +95,7 @@ const Create_Student = () => {
   const columns = [
     {
       name: "U-id",
-      selector: (row) => row.user_id,
+      selector: (row) => row.S_id,
       sortable: true,
       reorder: false,
     },
@@ -117,15 +117,15 @@ const Create_Student = () => {
       reorder: false,
     },
 
-    {
-      name: "Fee Status",
-      selector: (row) => (
-        <Typography variant="subtitle2" color="primary">
-          Paid
-        </Typography>
-      ),
-      reorder: false,
-    },
+    // {
+    //   name: "Fee Status",
+    //   selector: (row) => (
+    //     <Typography variant="subtitle2" color="primary">
+    //       Paid
+    //     </Typography>
+    //   ),
+    //   reorder: false,
+    // },
     {
       name: "Actions",
       selector: (row) => (
@@ -154,7 +154,7 @@ const Create_Student = () => {
     <Box>
       <Card>
         <Box display="flex" alignItems="center" className={classes.typo}>
-          <Typography variant="h5"> Transactions </Typography>
+          <Typography variant="h5"> Students </Typography>
           <IconButton onClick={addHandler} color="primary">
             <AddCircleOutlineIcon />
           </IconButton>
@@ -162,7 +162,6 @@ const Create_Student = () => {
         <DataTable
           actions={
             <Box className={classes.search}>
-              {/* <RangePicker onDateChanges={onDateChanges} /> */}
               <TextField
                 label="Search"
                 variant="outlined"

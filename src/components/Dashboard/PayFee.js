@@ -5,11 +5,13 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  List,
   ListItem,
   ListItemText,
   makeStyles,
   MenuItem,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import clsx from "clsx";
 import { useFormik } from "formik";
@@ -39,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     marginTop: "20px",
   },
+  listItemstext: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
 }));
 
 const FEE_TYPE_ADMISSION = "admission";
@@ -65,6 +71,7 @@ const PayFee = () => {
   const [isMonth, setIsMonth] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [saveData, setsaveData] = useState([]);
+  console.log(studentData);
   useEffect(() => {
     const q = query(collection(db, "Users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -120,7 +127,9 @@ const PayFee = () => {
       resetForm({ values: "" });
       let i = 0;
       await addDoc(collection(db, "PayFee"), {
-        ...values,
+        feeType: values.feeType,
+        Amount: values.Amount,
+        Month: values.Month,
         user_id: saveData.length,
         timestamp: Timestamp.now(),
       });
@@ -220,44 +229,43 @@ const PayFee = () => {
         {setusersData.map((item) => (
           <CardContent>
             <CardHeader title="User Details" />
-
             <Grid container spacing={2}>
               <Grid item md={6} xs={12}>
-                <ListItem>
-                  <ListItemText> Name:- </ListItemText>
-                  <ListItemText> {item.name} </ListItemText>
+                <ListItem className={classes.listItemstext}>
+                  <Typography variant="h6">Name:-</Typography>
+                  <Typography>{item.name}</Typography>
                 </ListItem>
-                <ListItem>
-                  <ListItemText> Email:- </ListItemText>
-                  <ListItemText> {item.email} </ListItemText>
+                <ListItem className={classes.listItemstext}>
+                  <Typography variant="h6"> Email:- </Typography>
+                  <Typography> {item.email} </Typography>
                 </ListItem>
-                <ListItem>
-                  <ListItemText>Role:- </ListItemText>
-                  <ListItemText>{item.role} </ListItemText>
+                <ListItem className={classes.listItemstext}>
+                  <Typography variant="h6">Role:- </Typography>
+                  <Typography>{item.role} </Typography>
                 </ListItem>
-                <ListItem>
-                  <ListItemText>Address:- </ListItemText>
-                  <ListItemText>{item.userDetails.Address} </ListItemText>
+                <ListItem className={classes.listItemstext}>
+                  <Typography variant="h6">Address:- </Typography>
+                  <Typography>{item.userDetails.Address} </Typography>
                 </ListItem>
               </Grid>
               <Grid item md={6} xs={12}>
-                <ListItem>
-                  <ListItemText>Phone Number:- </ListItemText>
-                  <ListItemText>{item.userDetails.PhoneNumber} </ListItemText>
+                <ListItem className={classes.listItemstext}>
+                  <Typography variant="h6">Phone Number:- </Typography>
+                  <Typography>{item.userDetails.PhoneNumber} </Typography>
                 </ListItem>
-                <ListItem>
-                  <ListItemText>Father Name:- </ListItemText>
-                  <ListItemText>{item.userDetails.fatherName} </ListItemText>
+                <ListItem className={classes.listItemstext}>
+                  <Typography variant="h6">Father Name:- </Typography>
+                  <Typography>{item.userDetails.fatherName} </Typography>
                 </ListItem>
                 {studentData.map((item) => (
                   <>
-                    <ListItem>
-                      <ListItemText>Roll Number:- </ListItemText>
-                      <ListItemText>{item.rollNo} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">Roll Number:- </Typography>
+                      <Typography>{item.rollNo} </Typography>
                     </ListItem>
-                    <ListItem>
-                      <ListItemText>Class Name:- </ListItemText>
-                      <ListItemText>{item.ClassName} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">Class Name:- </Typography>
+                      <Typography>{item.ClassName} </Typography>
                     </ListItem>
                   </>
                 ))}

@@ -29,6 +29,7 @@ import { Button, makeStyles } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
 import { paths } from "./Routes/paths";
+import swal from "sweetalert";
 
 const drawerWidth = 240;
 const usestyles = makeStyles(() => ({
@@ -41,9 +42,12 @@ const usestyles = makeStyles(() => ({
   icons: {
     color: "green",
   },
-  main: {
-    backgroundColor: "#d1d7d1",
-    height: "100vh",
+  logoutBtn: {
+    backgroundColor: "#029904",
+    color: "#fff",
+    "&:hover": {
+      backgroundColor: "#029904",
+    },
   },
 }));
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
@@ -110,10 +114,23 @@ const Create_Drawer = () => {
   };
 
   const signoutHanlder = () => {
-    try {
-      dispatch(logoutInitiate);
-      navigate(paths.getLogin());
-    } catch (error) {}
+    swal({
+      title: "Would you Want to log out?",
+      text: "Once you log out , you will  be perminantly logged out !",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        dispatch(logoutInitiate);
+        navigate(paths.getLogin());
+        swal(" You have been successfully logged out!", {
+          icon: "success",
+        });
+      } else {
+        swal("Your imaginary file is safe!");
+      }
+    });
   };
 
   let activeStyle = {

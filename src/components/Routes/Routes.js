@@ -14,10 +14,10 @@ import { Navigate, Outlet } from "react-router-dom";
 import { auth } from "../../firebase";
 import { useSelector } from "react-redux";
 
-export const UseRoute = [
+export const UseRoute = (currentAdmin) => [
   {
     path: paths.getRoot(),
-    element: <Create_Drawer />,
+    element: currentAdmin ? <Outlet /> : <Navigate to={paths.getLogin()} />,
     children: [
       { path: paths.getDashboard(), element: <Charts /> },
       { path: paths.getCourses(), element: <Courses /> },
@@ -29,13 +29,23 @@ export const UseRoute = [
       { path: paths.getPayFee(), element: <PayFee /> },
       { path: paths.getUsers(), element: <Users /> },
       { path: paths.getUsersList(), element: <UsersList /> },
-
       { path: paths.getTransactions(), element: <Transactions /> },
     ],
   },
 
   {
-    path: paths.getLogin(),
-    element: <Login />,
+    path: paths.getRoot(),
+    element: !currentAdmin ? (
+      <Outlet />
+    ) : (
+      <Navigate to={paths.getDashboard()} />
+    ),
+
+    children: [
+      {
+        path: paths.getLogin(),
+        element: <Login />,
+      },
+    ],
   },
 ];

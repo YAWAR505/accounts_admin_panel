@@ -143,7 +143,7 @@ const Create_Courses = () => {
       reorder: false,
     },
     {
-      name: "Per/Monthely Fee",
+      name: "Monthly Fee",
       selector: (row) => " ₹ " + numberWithCommas(row.monthelyFee.toFixed(2)),
       reorder: false,
     },
