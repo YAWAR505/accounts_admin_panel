@@ -18,6 +18,7 @@ import RangePicker from "react-range-picker";
 import moment from "moment";
 import { CSVLink } from "react-csv";
 import TransactionPdf from "./TransactionPdf";
+import Loader from "../Constants/Loader";
 
 const useStyles = makeStyles(() => ({
   daterange: {
@@ -102,9 +103,10 @@ const Transactions = () => {
       button: true,
     },
     {
-      name: "Pdf",
+      name: "Invoice",
       selector: (row) => <TransactionPdf row={row} />,
-      button: true,
+      center: true
+
     },
     {
       name: "Paid On",
@@ -112,6 +114,7 @@ const Transactions = () => {
         moment(row.timestamp.seconds * 1000).format(" MMMM-DD- YY hh:mm a"),
 
       reorder: false,
+      right: true
     },
   ];
 
@@ -158,8 +161,8 @@ const Transactions = () => {
         defaultSortFieldId={1}
         pagination
       />
-      {/* <TransactionPdf /> */}
     </Paper>
+    // <Loader/>
   );
 };
 export default Transactions;

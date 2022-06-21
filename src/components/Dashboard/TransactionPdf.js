@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { jsPDF } from "jspdf";
-import DataTable from "react-data-table-component";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const useStyles = makeStyles(() => ({
   pdfView: {
@@ -40,7 +40,6 @@ const useStyles = makeStyles(() => ({
       textAlign: "center",
       border: "none",
       padding: "10px 0",
-
       borderBottom: "1px solid",
     },
     "& th": {
@@ -50,6 +49,9 @@ const useStyles = makeStyles(() => ({
       borderRadius: "5px",
     },
   },
+  pdfButton:{
+    color: "#dc5151",
+  }
 }));
 
 const TransactionPdf = ({ row }) => {
@@ -69,7 +71,6 @@ const TransactionPdf = ({ row }) => {
       x: 10,
       y: 10,
       height: 300,
-
       width: 200,
       windowWidth: 700,
     });
@@ -110,8 +111,8 @@ const TransactionPdf = ({ row }) => {
           </tr>
         </table>
       </div>
-      <Button variant="outlined" color="primary" onClick={handleDownload}>
-        Pdf
+      <Button className={classes.pdfButton} onClick={handleDownload}>
+      <PictureAsPdfIcon/>  
       </Button>
     </>
   );

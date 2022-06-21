@@ -3,11 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRoutes, BrowserRouter as Router } from "react-router-dom";
 import { LoginRoute, UseRoute } from "./components/Routes/Routes";
+import CircularProgress from '@mui/material/CircularProgress';
 import { auth } from "./firebase";
 
 import { signinSuccess, logoutInitiate } from "./redux/Action";
+import { Box, makeStyles } from "@material-ui/core";
+import { ClassNames } from "@emotion/react";
+import Loader from "./components/Constants/Loader";
+
 const App = () => {
   const dispatch = useDispatch();
+
   const isAuth = useSelector((state) => state.reducer);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -15,14 +21,19 @@ const App = () => {
         dispatch(signinSuccess(user));
       } else {
         // User is signed out.
-        dispatch(logoutInitiate(null));
+        dispatch(logoutInitiate(user));
       }
     });
     return unsubscribe();
   }, []);
-  const { currentAdmin } = isAuth;
-  console.log(currentAdmin, "currentAdmin");
-  let element = useRoutes(UseRoute(currentAdmin));
-  return element;
+
+  console.log(isAuth, "currentAdmin");
+  let element = useRoutes(UseRoute());
+  
+      if(isAuth.loading){
+        return <Loader/>
+      }
+    
+  return element; 
 };
 export default App;

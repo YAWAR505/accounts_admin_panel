@@ -11,14 +11,15 @@ import Create_Drawer from "../Create_Drawer";
 import Login from "../../Pages/Login";
 import { paths } from "./paths";
 import { Navigate, Outlet } from "react-router-dom";
+import { auth } from "../../firebase";
 
-export const UseRoute = (currentAdmin) => [
+export const UseRoute = () => [
   {
     path: paths.getRoot(),
-    element: currentAdmin ? (
+    element: auth.currentUser ? (
       <Create_Drawer />
     ) : (
-      <Navigate to={paths.getLogin()} />
+      <Navigate to={paths.getLogin()}/>
     ),
     children: [
       { path: paths.getDashboard(), element: <Charts /> },
@@ -36,6 +37,8 @@ export const UseRoute = (currentAdmin) => [
   },
   {
     path: paths.getLogin(),
-    element: !currentAdmin ? <Login /> : <Navigate to={paths.getDashboard()} />,
+    // element:<Login /> 
+
+    element: !auth.currentUser  ? <Login /> : <Navigate to={paths.getDashboard()}/>,
   },
 ];

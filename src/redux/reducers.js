@@ -1,6 +1,6 @@
 import * as types from "./actionTypes";
 const initialState = {
-  loading: false,
+  loading: true,
   currentAdmin: null,
   error: null,
   requestsList: [],
@@ -17,7 +17,7 @@ const reducer = (state = initialState, action) => {
     case types.SIGNIN_FAIL:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: action.payload,
       };
 
@@ -36,7 +36,7 @@ const reducer = (state = initialState, action) => {
     case types.SIGNUP_FAIL:
       return {
         ...state,
-        loading: true,
+        loading: false,
         error: action.payload,
       };
     default:
