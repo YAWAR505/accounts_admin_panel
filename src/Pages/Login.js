@@ -12,8 +12,9 @@ import {
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { signinInitiate } from "../redux/Action";
+import { signinInitiate, signinFail, signinSuccess } from "../redux/Action";
 import { paths } from "../components/Routes/paths";
+import { auth } from "../firebase";
 const usestyles = makeStyles(() => ({
   login: {
     width: "100%",
@@ -34,10 +35,10 @@ const usestyles = makeStyles(() => ({
 }));
 const Login = () => {
   const classes = usestyles();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const isAuth = useSelector((state) => state.reducer);
+  const { currentAdmin } = isAuth;
   const validationSchema = yup.object({
     email: yup
       .string("Enter your email")
@@ -55,11 +56,9 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      try {
-        dispatch(signinInitiate(values.email, values.password));
-      } catch (e) {
-        toast.error("Please check the Password" + e.message);
-      }
+      const disp = dispatch(signinInitiate(values.email, values.password));
+      console.log(disp);
+      toast.error("Please check the Password");
     },
   });
 

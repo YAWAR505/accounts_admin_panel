@@ -11,13 +11,15 @@ import Create_Drawer from "../Create_Drawer";
 import Login from "../../Pages/Login";
 import { paths } from "./paths";
 import { Navigate, Outlet } from "react-router-dom";
-import { auth } from "../../firebase";
-import { useSelector } from "react-redux";
 
 export const UseRoute = (currentAdmin) => [
   {
     path: paths.getRoot(),
-    element: currentAdmin ? <Outlet /> : <Navigate to={paths.getLogin()} />,
+    element: currentAdmin ? (
+      <Create_Drawer />
+    ) : (
+      <Navigate to={paths.getLogin()} />
+    ),
     children: [
       { path: paths.getDashboard(), element: <Charts /> },
       { path: paths.getCourses(), element: <Courses /> },
@@ -32,20 +34,8 @@ export const UseRoute = (currentAdmin) => [
       { path: paths.getTransactions(), element: <Transactions /> },
     ],
   },
-
   {
-    path: paths.getRoot(),
-    element: !currentAdmin ? (
-      <Outlet />
-    ) : (
-      <Navigate to={paths.getDashboard()} />
-    ),
-
-    children: [
-      {
-        path: paths.getLogin(),
-        element: <Login />,
-      },
-    ],
+    path: paths.getLogin(),
+    element: !currentAdmin ? <Login /> : <Navigate to={paths.getDashboard()} />,
   },
 ];

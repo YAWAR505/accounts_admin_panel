@@ -122,9 +122,9 @@ const Create_Drawer = () => {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        dispatch(logoutInitiate);
+        dispatch(logoutInitiate());
         navigate(paths.getLogin());
-        swal(" You have been successfully logged out!", {
+        swal(" Log Out successfully !", {
           icon: "success",
         });
       } else {

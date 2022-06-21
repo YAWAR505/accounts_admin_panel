@@ -7,24 +7,21 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { addDoc, collection, Timestamp } from "firebase/firestore";
-import { paths } from "../components/Routes/paths";
-console.log(auth.currentUser, "auth.currentUser");
 
-const signinSuccess = (admin) => ({
+export const signinSuccess = (admin) => ({
   type: types.SIGNIN_SUCCESS,
   payload: admin,
 });
 
-const signinFail = (error) => ({
+export const signinFail = (error) => ({
   type: types.SIGNIN_FAIL,
   payload: error,
 });
 
 export const signinInitiate = (email, password) => async (dispatch) => {
   const user = await signInWithEmailAndPassword(auth, email, password);
-
   try {
-    dispatch(signinSuccess(user));
+    dispatch(signinSuccess(user.user));
   } catch (error) {
     dispatch(signinFail(error.message));
   }

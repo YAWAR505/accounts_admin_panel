@@ -48,8 +48,6 @@ const useStyles = makeStyles(() => ({
 }));
 const Transactions = () => {
   const classes = useStyles();
-  const [selected, setSelected] = useState(undefined);
-  const [menuAnchor, setMenuAnchor] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
   const [q, setQ] = useState("");

@@ -1,24 +1,27 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Navigate,
-  Route,
-  Routes,
-  Outlet,
-  useRoutes,
-  BrowserRouter as Router,
-} from "react-router-dom";
-import { paths } from "./components/Routes/paths";
+import { useRoutes, BrowserRouter as Router } from "react-router-dom";
 import { LoginRoute, UseRoute } from "./components/Routes/Routes";
 import { auth } from "./firebase";
-import Login from "./Pages/Login";
-import { setUser } from "./redux/Action";
 
+import { signinSuccess, logoutInitiate } from "./redux/Action";
 const App = () => {
+  const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.reducer);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(signinSuccess(user));
+      } else {
+        // User is signed out.
+        dispatch(logoutInitiate(null));
+      }
+    });
+    return unsubscribe();
+  }, []);
   const { currentAdmin } = isAuth;
-  console.log(currentAdmin);
+  console.log(currentAdmin, "currentAdmin");
   let element = useRoutes(UseRoute(currentAdmin));
   return element;
 };
