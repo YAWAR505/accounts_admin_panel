@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardContent,
   Grid,
   IconButton,
   makeStyles,
@@ -19,8 +20,15 @@ import moment from "moment";
 import { CSVLink } from "react-csv";
 import TransactionPdf from "./TransactionPdf";
 import Loader from "../Constants/Loader";
-
+import clsx from "clsx";
+import { DateRangePicker } from "rsuite";
+import "rsuite/dist/rsuite.min.css";
 const useStyles = makeStyles(() => ({
+  root: {
+    padding: 0,
+
+    width: "100%",
+  },
   daterange: {
     textAlign: "center",
   },
@@ -45,6 +53,9 @@ const useStyles = makeStyles(() => ({
   },
   search: {
     marginTop: "10px",
+    width: "100%",
+    display: "flex",
+    justifyContent: "start",
   },
 }));
 const Transactions = () => {
@@ -105,8 +116,7 @@ const Transactions = () => {
     {
       name: "Invoice",
       selector: (row) => <TransactionPdf row={row} />,
-      center: true
-
+      center: true,
     },
     {
       name: "Paid On",
@@ -114,7 +124,7 @@ const Transactions = () => {
         moment(row.timestamp.seconds * 1000).format(" MMMM-DD- YY hh:mm a"),
 
       reorder: false,
-      right: true
+      right: true,
     },
   ];
 
@@ -122,12 +132,32 @@ const Transactions = () => {
     setQ(e.target.value);
   };
   useEffect(() => {
-    const value = transactions.filter((item) =>
-      item.studentName.toLowerCase().includes(q)
+    const value = transactions.filter(
+      (item) => item.studentName.toLowerCase().includes(q)
     );
     setFilteredData(value);
   }, [q, transactions]);
 
+  const hanldeDateChange = (startDate) => {
+    if (!startDate) {
+      setFilteredData(transactions);
+      return;
+    }
+
+    const dateValues = transactions.filter((item) => {
+      return (
+        moment(item.timestamp.seconds * 1000).isSameOrAfter(
+          moment(startDate[0]).startOf("day")
+        ) &&
+        moment(item.timestamp.seconds * 1000).isSameOrBefore(
+          moment(startDate[1]).endOf("day")
+        )
+      );
+    });
+    setFilteredData(dateValues);
+  };
+
+  const styles = { width: 260 };
   return (
     <Paper elevation={2}>
       <div className={classes.csvFileParent}>
@@ -143,17 +173,35 @@ const Transactions = () => {
           Export CSV
         </CSVLink>
       </div>
+      <Card className={clsx(classes.root)}>
+        <CardContent>
+          <Grid container spacing={2} className={classes.search}>
+            <Grid item md={6} xs={12}>
+              {/* <TextField
+                label="Search"
+                variant="outlined"
+                size="small"
+             /> */}
+              <DateRangePicker
+                size="lg"
+                placeholder="Filter by Date"
+                style={styles}
+                onChange={hanldeDateChange}
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                label="Search"
+                variant="outlined"
+                size="small"
+                value={q}
+                onChange={handleSearch}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
       <DataTable
-        actions={
-          <Box className={classes.search}>
-            <TextField
-              label="Search"
-              variant="outlined"
-              value={q}
-              onChange={handleSearch}
-            />
-          </Box>
-        }
         columns={columns}
         data={FilteredData}
         striped

@@ -125,11 +125,8 @@ const PayFee = () => {
 
     onSubmit: async (values, { resetForm }) => {
       resetForm({ values: "" });
-      let i = 0;
       await addDoc(collection(db, "PayFee"), {
-        feeType: values.feeType,
-        Amount: values.Amount,
-        Month: values.Month,
+      ...values,
         user_id: saveData.length,
         timestamp: Timestamp.now(),
       });
