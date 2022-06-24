@@ -8,7 +8,6 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -16,12 +15,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
 import {
-  Link,
-  Navigate,
   NavLink,
   Outlet,
-  Route,
-  Routes,
   useNavigate,
 } from "react-router-dom";
 import Manu from "./Manu-items/Manu_Items";
@@ -30,14 +25,18 @@ import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
 import { paths } from "./Routes/paths";
 import swal from "sweetalert";
-
-const drawerWidth = 240;
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+const drawerWidth = 280;
 const usestyles = makeStyles(() => ({
   navlink: {
     textDecoration: "none",
-    display: "flex",
     color: "#fff",
-    alignItems: "center",
+    display: "flex",
+    "&:hover": {
+      textDecoration: "none",
+      color: "#fff",
+    },
+   
   },
   icons: {
     color: "green",
@@ -49,6 +48,9 @@ const usestyles = makeStyles(() => ({
       backgroundColor: "#029904",
     },
   },
+  listitem:{
+    backgroundColor: "#029904",
+  }
 }));
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -79,7 +81,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
+    marginLeft: `-${drawerWidth}px`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -90,14 +92,12 @@ const AppBar = styled(MuiAppBar, {
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
+  justifyContent: "center",
   padding: theme.spacing(0, 1),
-  //   necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
 }));
 
 const Create_Drawer = () => {
-  const theme = useTheme();
   const [open, setOpen] = useState(true);
   const classes = usestyles();
   const navigate = useNavigate();
@@ -135,6 +135,7 @@ const Create_Drawer = () => {
 
   let activeStyle = {
     color: "#029904",
+    textDecoration:"none"
   
   };
   return (
@@ -145,6 +146,15 @@ const Create_Drawer = () => {
             backgroundColor: "#242426",
           }}
         >
+          
+          {
+          open ?
+    
+          <IconButton onClick={handleDrawerClose} sx={{ color: "#029904" }}>
+            <ChevronLeftIcon />
+          </IconButton>
+      
+        :
           <IconButton
             aria-label="open drawer"
             onClick={handleDrawerOpen}
@@ -153,8 +163,11 @@ const Create_Drawer = () => {
           >
             <ChevronRightIcon />
           </IconButton>
+          
+          }
+           
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Typography variant="h6" noWrap component="div">
+            <Typography variant="h6" noWrap >
               Accounts Dashboard
             </Typography>
             <Button
@@ -183,14 +196,12 @@ const Create_Drawer = () => {
       >
         <Divider />
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose} sx={{ color: "#029904" }}>
-            <ChevronLeftIcon />
-          </IconButton>
+         <IconButton size="large"><AccountCircleIcon sx={{ fontSize: 60 }} color="primary"/></IconButton> 
         </DrawerHeader>
-        <Divider />
+        <Divider sx={{ backgroundColor: "#c6c6c6" }}/>
         <List>
           {Manu.map((manu, index) => (
-            <ListItem button key={index} className={classes.listitem}>
+            <ListItem button key={index}  className={classes.listitem}>
               <NavLink
                 to={manu.path}
                 className={classes.navlink}
@@ -198,11 +209,11 @@ const Create_Drawer = () => {
               >
                 <ListItemIcon
                   className={classes.icons}
-                  style={{ color: "#029904" }}
+                  style={{ color: "#029904"}}
                 >
                   {manu.icon}
                 </ListItemIcon>
-                <ListItemText primary={manu.title} />
+                <ListItemText primary={manu.title}/>
               </NavLink>
             </ListItem>
           ))}

@@ -18,17 +18,17 @@ export const signinFail = (error) => ({
   payload: error,
 });
 
-export const signinInitiate = (email, password) => async (dispatch) => {
-  const user = await signInWithEmailAndPassword(auth, email, password);
+export const signinInitiate = (email, password) =>  (dispatch) => {
   try {
+    const user =  signInWithEmailAndPassword(auth, email, password);
     dispatch(signinSuccess(user.user));
   } catch (error) {
     dispatch(signinFail(error.message));
   }
 };
 
-export const logoutInitiate = (admin) => async (dispatch) => {
-  await signOut(auth);
+export const logoutInitiate = (admin) =>  (dispatch) => {
+   signOut(auth);
   dispatch({
     type: types.LOGOUT_END,
     payload: admin,

@@ -10,19 +10,21 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { MoreVertRounded, Search } from "@mui/icons-material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase";
-import RangePicker from "react-range-picker";
 import moment from "moment";
 import { CSVLink } from "react-csv";
 import TransactionPdf from "./TransactionPdf";
-import Loader from "../Constants/Loader";
 import clsx from "clsx";
 import { DateRangePicker } from "rsuite";
+import { jsPDF } from "jspdf";
+import { renderToString } from "react-dom/server";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+
 import "rsuite/dist/rsuite.min.css";
+import Widget from "./Widget";
 const useStyles = makeStyles(() => ({
   root: {
     padding: 0,
@@ -57,13 +59,16 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     justifyContent: "start",
   },
+  pdfButton:{
+    color: "#dc5151",
+  },
+
 }));
 const Transactions = () => {
   const classes = useStyles();
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
   const [q, setQ] = useState("");
-  const pdfRef = useRef(null);
   useEffect(() => {
     const q = query(collection(db, "PayFee"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -75,6 +80,22 @@ const Transactions = () => {
     });
     return () => unsubscribe();
   }, []);
+
+  const downloadInvoice = (row) => {
+    console.log(row);
+    const pdf = new jsPDF("p", "px", "a4");
+    const html = renderToString(<TransactionPdf row={row} />);
+    pdf.html(html,{
+      callback: function (pdf) {
+        pdf.save("Invoice.pdf");
+      },
+      html2canvas: { scale: 0.6 },
+      x: 10,
+      y: 10,
+      width: 200,
+      windowWidth: 700,
+    });
+  };
 
   const columns = [
     {
@@ -115,7 +136,12 @@ const Transactions = () => {
     },
     {
       name: "Invoice",
-      selector: (row) => <TransactionPdf row={row} />,
+      selector: (row) =>(
+        <IconButton className={classes.pdfButton} onClick={() => downloadInvoice(row)}>
+        <PictureAsPdfIcon/>
+        </IconButton>
+      ),
+
       center: true,
     },
     {
@@ -126,6 +152,7 @@ const Transactions = () => {
       reorder: false,
       right: true,
     },
+    
   ];
 
   const handleSearch = (e) => {
@@ -159,7 +186,26 @@ const Transactions = () => {
 
   const styles = { width: 260 };
   return (
-    <Paper elevation={2}>
+    <Box >
+      <Box>
+      <Grid container spacing={2} >
+         <Grid xs={12} md={3}>
+         <Widget type="user" />
+         </Grid>
+         <Grid xs={12} md={3}>
+
+          <Widget type="order" />
+          </Grid>
+         <Grid xs={12} md={3}>
+
+          <Widget type="earning" />
+          </Grid>
+         <Grid xs={12} md={3}>
+
+          <Widget type="balance" />
+         </Grid>
+      </Grid>
+      </Box>
       <div className={classes.csvFileParent}>
         <Box display="flex" alignItems="center" className={classes.typo}>
           <Typography variant="h5"> Transactions </Typography>
@@ -201,7 +247,8 @@ const Transactions = () => {
           </Grid>
         </CardContent>
       </Card>
-      <DataTable
+    <Paper elevation={3}>
+    <DataTable
         columns={columns}
         data={FilteredData}
         striped
@@ -210,6 +257,7 @@ const Transactions = () => {
         pagination
       />
     </Paper>
+    </Box>
     // <Loader/>
   );
 };

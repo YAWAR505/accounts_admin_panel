@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   Box,
   Button,
+  IconButton,
+  InputAdornment,
   makeStyles,
   TextField,
   Typography,
@@ -15,6 +17,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { signinInitiate, signinFail, signinSuccess } from "../redux/Action";
 import { paths } from "../components/Routes/paths";
 import { auth } from "../firebase";
+import * as types from '../redux/actionTypes'
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 const usestyles = makeStyles(() => ({
   login: {
     width: "100%",
@@ -35,10 +39,13 @@ const usestyles = makeStyles(() => ({
 }));
 const Login = () => {
   const classes = usestyles();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.reducer);
-  const { currentAdmin } = isAuth;
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { error } = useSelector((state) => state.reducer);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   const validationSchema = yup.object({
     email: yup
       .string("Enter your email")
@@ -49,6 +56,15 @@ const Login = () => {
       .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
   });
+
+  // useEffect(() => {
+  //   if (error) {
+  //       toast.error("Please check the Password")
+  //     }   else {  
+  //        toast.success("Login Successfully")
+  //     }
+  // }, [error]);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -56,9 +72,8 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const disp = dispatch(signinInitiate(values.email, values.password));
-      console.log(disp);
-      toast.error("Please check the Password");
+        dispatch(signinInitiate(values.email, values.password))
+      //  toast.error("username or password is wrong ")
     },
   });
 
@@ -89,11 +104,24 @@ const Login = () => {
               fullWidth
               margin="normal"
               variant="outlined"
-              type="password"
+              type={showPassword ? "text" : "password"}
               onChange={formik.handleChange}
               value={formik.values.password}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={toggleShowPassword}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
             <Button
               type="submit"
@@ -111,3 +139,5 @@ const Login = () => {
 };
 
 export default Login;
+
+

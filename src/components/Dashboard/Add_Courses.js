@@ -11,7 +11,6 @@ import {
   collection,
   doc,
   onSnapshot,
-  orderBy,
   query,
   Timestamp,
   updateDoc,
@@ -19,7 +18,6 @@ import {
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import * as yup from "yup";
 import { db } from "../../firebase";
 import { CLASS_DATA } from "../Dashboard/classData";
 import { paths } from "../Routes/paths";

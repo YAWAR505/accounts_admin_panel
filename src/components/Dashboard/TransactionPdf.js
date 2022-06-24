@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
+import React from "react";
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -10,8 +8,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { jsPDF } from "jspdf";
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+
 
 const useStyles = makeStyles(() => ({
   pdfView: {
@@ -56,36 +53,15 @@ const useStyles = makeStyles(() => ({
 
 const TransactionPdf = ({ row }) => {
   const classes = useStyles();
-  const pdfRef = useRef(null);
-
-  const handleDownload = () => {
-    const Content = pdfRef.current;
-    const pdf = new jsPDF("p", "px", "a4");
-    Content.style.display = "block";
-    pdf.html(Content, {
-      callback: function (pdf) {
-        pdf.save("Invoice.pdf");
-        Content.style.display = "none";
-      },
-      html2canvas: { scale: 0.6 },
-      x: 10,
-      y: 10,
-      height: 300,
-      width: 200,
-      windowWidth: 700,
-    });
-  };
 
   return (
     <>
-      <div ref={pdfRef} style={{ display: "none", position: "absolute" }}>
         <Card>
-          <CardHeader title="INVOICE" className={classes.InvoiceHead} />
           <CardContent>
+          <CardHeader title="INVOICE" className={classes.InvoiceHead} />
             <Typography variant="h5" className={classes.InvoiceTo}>
               TO
             </Typography>
-
             <ListItemText>Student Name:- {row?.studentName} </ListItemText>
             <ListItemText> Class:- {row?.class} </ListItemText>
             <ListItemText> User Id:- {row?.user_id} </ListItemText>
@@ -94,7 +70,9 @@ const TransactionPdf = ({ row }) => {
           </CardContent>
         </Card>
         <Divider />
-        <Typography variant="h5" className={classes.InvoiceTo}>
+      <Card>
+      <CardContent>
+      <Typography variant="h5" className={classes.InvoiceTo}>
           Transaction History
         </Typography>
         <table className={classes.total}>
@@ -106,14 +84,11 @@ const TransactionPdf = ({ row }) => {
           <tr>
             <td>{row.feeType}</td>
             <td>{row?.Amount}</td>
-
-            <td>{row?.Amount}</td>
+            <td>${row?.Amount}</td>
           </tr>
         </table>
-      </div>
-      <Button className={classes.pdfButton} onClick={handleDownload}>
-      <PictureAsPdfIcon/>  
-      </Button>
+        </CardContent>
+      </Card>
     </>
   );
 };
