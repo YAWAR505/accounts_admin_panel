@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,12 +12,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import { signinInitiate, signinFail, signinSuccess } from "../redux/Action";
-import { paths } from "../components/Routes/paths";
-import { auth } from "../firebase";
-import * as types from '../redux/actionTypes'
+import { ToastContainer } from "react-toastify";
+import { signinInitiate } from "../redux/Action";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 const usestyles = makeStyles(() => ({
   login: {
@@ -60,7 +56,7 @@ const Login = () => {
   // useEffect(() => {
   //   if (error) {
   //       toast.error("Please check the Password")
-  //     }   else {  
+  //     }   else {
   //        toast.success("Login Successfully")
   //     }
   // }, [error]);
@@ -72,7 +68,7 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-        dispatch(signinInitiate(values.email, values.password))
+      dispatch(signinInitiate(values.email, values.password));
       //  toast.error("username or password is wrong ")
     },
   });
@@ -120,7 +116,7 @@ const Login = () => {
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                )
+                ),
               }}
             />
             <Button
@@ -139,5 +135,3 @@ const Login = () => {
 };
 
 export default Login;
-
-

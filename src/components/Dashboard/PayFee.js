@@ -71,7 +71,6 @@ const PayFee = () => {
   const [isMonth, setIsMonth] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [saveData, setsaveData] = useState([]);
-  console.log(studentData);
   useEffect(() => {
     const q = query(collection(db, "Users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -126,7 +125,7 @@ const PayFee = () => {
     onSubmit: async (values, { resetForm }) => {
       resetForm({ values: "" });
       await addDoc(collection(db, "PayFee"), {
-      ...values,
+        ...values,
         user_id: saveData.length,
         timestamp: Timestamp.now(),
       });

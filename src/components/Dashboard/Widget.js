@@ -1,26 +1,90 @@
 import "./widget.scss";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-
+import BarChartIcon from "@mui/icons-material/BarChart";
+import { makeStyles } from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../firebase";
+import moment from "moment";
+const useStyles = makeStyles(
+  () => ({
+    icon: {
+      borderRadius: "30px",
+      padding: "5px",
+    },
+  }),
+  []
+);
 const Widget = ({ type }) => {
+  const [transactions, setTransactions] = useState([]);
+  const today = moment().format("YYYY-MM-DD");
+  const fullMonth = moment().subtract(30, "d").format("YYYY-MM-DD");
+  const sevendays = moment().subtract(7, "d").format("YYYY-MM-DD");
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  console.log(fullMonth, "fullMonth>>>>>>");
+  const classes = useStyles();
   let data;
+  useEffect(() => {
+    const q = query(collection(db, "PayFee"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const Transactions = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTransactions(Transactions);
+    });
+    return () => unsubscribe();
+  }, []);
+  var getsevendays;
+  const Days = transactions.filter((item) => {
+    return (
+      (getsevendays = moment(item.timestamp.seconds * 1000).format(
+        "YYYY-MM-DD"
+      )),
+      getsevendays >= sevendays && getsevendays <= today
+    );
+  });
 
-  //temporary
-  const amount = 100;
-  const diff = 20;
+  const SevenDaysAmount = Days.map((item) => item.Amount).reduce(
+    (prev, curr) => prev + curr,
+    0
+  );
+
+  var daysOfMonth;
+  const LastThirtyDays = transactions.filter((item) => {
+    return (
+      (daysOfMonth = moment(item.timestamp.seconds * 1000).format(
+        "YYYY-MM-DD"
+      )),
+      daysOfMonth >= fullMonth && daysOfMonth <= today
+    );
+  });
+  const Thirty_Days_Amount = LastThirtyDays.map((item) => item.Amount).reduce(
+    (sum, item) => sum + item,
+    0
+  );
+  const CurrentAmount = transactions.filter((item) => {
+    return moment(item.timestamp.seconds * 1000).format("YYYY-MM-DD") === today;
+  });
+  const TodayAmount = CurrentAmount.map((item) => item.Amount).reduce(
+    (prev, curr) => prev + curr,
+    0
+  );
 
   switch (type) {
-    case "user":
+    case "todaysPayment":
       data = {
-        title: "USERS",
-        isMoney: false,
+        amount: numberWithCommas(TodayAmount),
+        title: "Today`s Payment",
+        isMoney: true,
         link: "See all users",
         icon: (
-          <PersonOutlinedIcon
-            className="icon"
+          <BarChartIcon
+            sx={{ fontSize: 50 }}
+            className={classes.icon}
             style={{
               color: "crimson",
               backgroundColor: "rgba(255, 0, 0, 0.2)",
@@ -29,14 +93,16 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "order":
+    case "sevendaysPayment":
       data = {
-        title: "ORDERS",
-        isMoney: false,
+        amount: numberWithCommas(SevenDaysAmount),
+        title: "Last 7 day`s Payments",
+        isMoney: true,
         link: "View all orders",
         icon: (
-          <ShoppingCartOutlinedIcon
-            className="icon"
+          <BarChartIcon
+            sx={{ fontSize: 50 }}
+            className={classes.icon}
             style={{
               backgroundColor: "rgba(218, 165, 32, 0.2)",
               color: "goldenrod",
@@ -45,27 +111,31 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "earning":
+    case "monthPayment":
       data = {
-        title: "EARNINGS",
+        amount: numberWithCommas(Thirty_Days_Amount),
+        title: "Last 30 day`s Payments",
         isMoney: true,
         link: "View net earnings",
         icon: (
-          <MonetizationOnOutlinedIcon
-            className="icon"
+          <BarChartIcon
+            sx={{ fontSize: 50 }}
+            className={classes.icon}
             style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
           />
         ),
       };
       break;
-    case "balance":
+    case "TotalPayment":
       data = {
-        title: "BALANCE",
+        amount: numberWithCommas(Thirty_Days_Amount),
+        title: "Total Payments",
         isMoney: true,
         link: "See details",
         icon: (
           <AccountBalanceWalletOutlinedIcon
-            className="icon"
+            sx={{ fontSize: 50 }}
+            className={classes.icon}
             style={{
               backgroundColor: "rgba(128, 0, 128, 0.2)",
               color: "purple",
@@ -80,19 +150,12 @@ const Widget = ({ type }) => {
 
   return (
     <div className="widget">
+      <div className="right">{data.icon}</div>
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "$"} {amount}
+          {data.isMoney && "₹"} {data.amount}
         </span>
-        <span className="link">{data.link}</span>
-      </div>
-      <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
-        {data.icon}
       </div>
     </div>
   );

@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@material-ui/core";
 
-
 const useStyles = makeStyles(() => ({
   pdfView: {
     width: "100%",
@@ -46,9 +45,9 @@ const useStyles = makeStyles(() => ({
       borderRadius: "5px",
     },
   },
-  pdfButton:{
+  pdfButton: {
     color: "#dc5151",
-  }
+  },
 }));
 
 const TransactionPdf = ({ row }) => {
@@ -56,37 +55,37 @@ const TransactionPdf = ({ row }) => {
 
   return (
     <>
-        <Card>
-          <CardContent>
-          <CardHeader title="INVOICE" className={classes.InvoiceHead} />
-            <Typography variant="h5" className={classes.InvoiceTo}>
-              TO
-            </Typography>
-            <ListItemText>Student Name:- {row?.studentName} </ListItemText>
-            <ListItemText> Class:- {row?.class} </ListItemText>
-            <ListItemText> User Id:- {row?.user_id} </ListItemText>
-            <ListItemText> Fee Type:- {row?.feeType} </ListItemText>
-            <ListItemText>Amount:- {row?.Amount} </ListItemText>
-          </CardContent>
-        </Card>
-        <Divider />
       <Card>
-      <CardContent>
-      <Typography variant="h5" className={classes.InvoiceTo}>
-          Transaction History
-        </Typography>
-        <table className={classes.total}>
-          <tr>
-            <th>Type</th>
-            <th>Price</th>
-            <th>Amount</th>
-          </tr>
-          <tr>
-            <td>{row.feeType}</td>
-            <td>{row?.Amount}</td>
-            <td>${row?.Amount}</td>
-          </tr>
-        </table>
+        <CardContent>
+          <CardHeader title="INVOICE" className={classes.InvoiceHead} />
+          <Typography variant="h5" className={classes.InvoiceTo}>
+            TO
+          </Typography>
+          <ListItemText>Student Name:- {row?.studentName} </ListItemText>
+          <ListItemText> Class:- {row?.class} </ListItemText>
+          <ListItemText> User Id:- {row?.user_id} </ListItemText>
+          <ListItemText> Fee Type:- {row?.feeType} </ListItemText>
+          <ListItemText>Amount:- {row?.Amount} </ListItemText>
+        </CardContent>
+      </Card>
+      <Divider />
+      <Card>
+        <CardContent>
+          <Typography variant="h5" className={classes.InvoiceTo}>
+            Transaction History
+          </Typography>
+          <table className={classes.total}>
+            <tr>
+              <th>Type</th>
+              <th>Price</th>
+              <th>Amount</th>
+            </tr>
+            <tr>
+              <td>{row.feeType}</td>
+              <td>{row?.Amount}</td>
+              <td>${row?.Amount}</td>
+            </tr>
+          </table>
         </CardContent>
       </Card>
     </>

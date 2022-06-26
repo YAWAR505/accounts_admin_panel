@@ -14,18 +14,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
-import {
-  NavLink,
-  Outlet,
-  useNavigate,
-} from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Manu from "./Manu-items/Manu_Items";
 import { Button, makeStyles } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
 import { paths } from "./Routes/paths";
 import swal from "sweetalert";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 const drawerWidth = 280;
 const usestyles = makeStyles(() => ({
   navlink: {
@@ -36,7 +32,6 @@ const usestyles = makeStyles(() => ({
       textDecoration: "none",
       color: "#fff",
     },
-   
   },
   icons: {
     color: "green",
@@ -48,9 +43,6 @@ const usestyles = makeStyles(() => ({
       backgroundColor: "#029904",
     },
   },
-  listitem:{
-    backgroundColor: "#029904",
-  }
 }));
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -135,8 +127,7 @@ const Create_Drawer = () => {
 
   let activeStyle = {
     color: "#029904",
-    textDecoration:"none"
-  
+    textDecoration: "none",
   };
   return (
     <Box sx={{ display: "flex" }}>
@@ -146,28 +137,23 @@ const Create_Drawer = () => {
             backgroundColor: "#242426",
           }}
         >
-          
-          {
-          open ?
-    
-          <IconButton onClick={handleDrawerClose} sx={{ color: "#029904" }}>
-            <ChevronLeftIcon />
-          </IconButton>
-      
-        :
-          <IconButton
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }), color: "#029904" }}
-          >
-            <ChevronRightIcon />
-          </IconButton>
-          
-          }
-           
+          {open ? (
+            <IconButton onClick={handleDrawerClose} sx={{ color: "#029904" }}>
+              <ChevronLeftIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: "none" }), color: "#029904" }}
+            >
+              <ChevronRightIcon />
+            </IconButton>
+          )}
+
           <Box display="flex" justifyContent="space-between" width="100%">
-            <Typography variant="h6" noWrap >
+            <Typography variant="h6" noWrap>
               Accounts Dashboard
             </Typography>
             <Button
@@ -196,12 +182,14 @@ const Create_Drawer = () => {
       >
         <Divider />
         <DrawerHeader>
-         <IconButton size="large"><AccountCircleIcon sx={{ fontSize: 60 }} color="primary"/></IconButton> 
+          <IconButton size="large">
+            <AccountCircleIcon sx={{ fontSize: 60 }} color="primary" />
+          </IconButton>
         </DrawerHeader>
-        <Divider sx={{ backgroundColor: "#c6c6c6" }}/>
+        <Divider sx={{ backgroundColor: "#c6c6c6" }} />
         <List>
           {Manu.map((manu, index) => (
-            <ListItem button key={index}  className={classes.listitem}>
+            <ListItem button key={index} className={classes.listitem}>
               <NavLink
                 to={manu.path}
                 className={classes.navlink}
@@ -209,11 +197,11 @@ const Create_Drawer = () => {
               >
                 <ListItemIcon
                   className={classes.icons}
-                  style={{ color: "#029904"}}
+                  style={{ color: "#029904" }}
                 >
                   {manu.icon}
                 </ListItemIcon>
-                <ListItemText primary={manu.title}/>
+                <ListItemText primary={manu.title} />
               </NavLink>
             </ListItem>
           ))}
