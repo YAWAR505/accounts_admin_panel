@@ -10,7 +10,7 @@ import Transactions from "../Dashboard/Transactions";
 import Create_Drawer from "../Create_Drawer";
 import Login from "../../Pages/Login";
 import { paths } from "./paths";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
 export const UseRoute = () => [
@@ -37,8 +37,6 @@ export const UseRoute = () => [
   },
   {
     path: paths.getLogin(),
-    // element:<Login /> 
-
     element: !auth.currentUser  ? <Login /> : <Navigate to={paths.getDashboard()}/>,
   },
 ];
