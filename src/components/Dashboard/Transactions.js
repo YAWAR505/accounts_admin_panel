@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../../firebase";
 import moment from "moment";
 import { CSVLink } from "react-csv";
@@ -68,8 +68,9 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
   const [q, setQ] = useState("");
+  console.log(FilteredData)
   useEffect(() => {
-    const q = query(collection(db, "PayFee"));
+    const q = query( collection(db, "PayFee"),orderBy("studentName" ,"desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const Transactions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -101,7 +102,7 @@ const Transactions = () => {
       name: "S.No",
       selector: (row) => row.user_id,
       sortable: true,
-      reorder: false,
+      reorder: true,
     },
     {
       name: "Name",
@@ -124,6 +125,7 @@ const Transactions = () => {
         <Button
           size="small"
           style={{
+            textTransform: 'none',
             backgroundColor:
               row.feeType === "monthly_fee" || row.feeType === "admission"
                 ? "#029904"
@@ -261,3 +263,26 @@ const Transactions = () => {
   );
 };
 export default Transactions;
+
+// var homes = [{
+//   "h_id": "3",
+//   "city": "Dallas",
+//   "state": "TX",
+//   "zip": "75201",
+//   "price": "162500"
+// }, {
+//   "h_id": "4",
+//   "city": "Bevery Hills",
+//   "state": "CA",
+//   "zip": "90210",
+//   "price": "319250"
+// }, {
+//   "h_id": "5",
+//   "city": "New York",
+//   "state": "NY",
+//   "zip": "00010",
+//   "price": "962500"
+// }];
+
+// homes.sort((a, b) => Number(b.price) - Number(a.price));
+// console.log("ascending", homes);

@@ -24,7 +24,6 @@ const Widget = ({ type }) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  console.log(fullMonth, "fullMonth>>>>>>");
   const classes = useStyles();
   let data;
   useEffect(() => {

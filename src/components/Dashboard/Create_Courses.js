@@ -5,6 +5,8 @@ import {
   Divider,
   IconButton,
   makeStyles,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -21,10 +23,8 @@ import {
   onSnapshot,
   query,
   orderBy,
-  updateDoc,
   deleteDoc,
   doc,
-  getDocs,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -58,6 +58,11 @@ const useStyles = makeStyles(() => ({
   search: {
     marginTop: "10px",
   },
+  vertItem:{
+    display: "flex",
+    flexDirection: "column",
+   
+  }
 }));
 const Create_Courses = () => {
   function numberWithCommas(x) {
@@ -68,7 +73,17 @@ const Create_Courses = () => {
   const [data, setData] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [q, setQ] = useState("");
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isOpen = Boolean(anchorEl);
   const actionEdit = async (id) => {
     try {
       const netEditElement = data.find((elemnt) => elemnt.id === id);
@@ -150,14 +165,35 @@ const Create_Courses = () => {
     {
       name: "Actions",
       selector: (row) => (
-        <Box display="flex">
-          <IconButton onClick={() => actionEdit(row?.id)}>
-            <EditIcon />
+        <>
+          <IconButton
+            aria-label="more"
+            onClick={handleClick}
+            aria-haspopup="true"
+            aria-controls="long-menu"
+          >
+            <MoreVertRounded />
           </IconButton>
-          <IconButton onClick={() => actionDelete(row?.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </Box>
+          <Menu
+            anchorEl={anchorEl}
+            keepMounted
+            onClose={handleClose}
+            open={isOpen}
+            style={{     width: '10ch',}}
+            elevation={2}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'bottom', vertical: 'top' }}
+          >
+            {/* <MenuItem className={classes.vertItem} onClick={handleClose}> */}
+              <IconButton onClick={() => actionEdit(row?.id)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={() => actionDelete(row?.id)}>
+                <DeleteIcon />
+              </IconButton>
+            {/* </MenuItem> */}
+          </Menu>
+        </>
       ),
       ignoreRowClick: true,
       allowOverflow: true,

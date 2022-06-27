@@ -3,6 +3,8 @@ import {
   Card,
   IconButton,
   makeStyles,
+  Menu,
+  MenuItem,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -20,31 +22,42 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useNavigate } from "react-router-dom";
 import { MoreVertRounded } from "@mui/icons-material";
 import { paths } from "../Routes/paths";
-import DataTableExtensions from "react-data-table-component-extensions";
 import "react-data-table-component-extensions/dist/index.css";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import swal from "sweetalert";
 const useStyles = makeStyles(() => ({
+  
   typo: {
     marginLeft: "10px",
-  },
+   },
   search: {
     marginTop: "10px",
+   },
+  vertItem:{
+  
+  
   },
+ 
+
 }));
 const Create_Student = () => {
-  const [selected, setSelected] = useState(undefined);
-  const [menuAnchor, setMenuAnchor] = useState(null);
   const [user, setUser] = useState([]);
-  const [transactions, setTransactions] = useState([]);
   const [q, setQ] = useState("");
   const [FilteredData, setFilteredData] = useState([]);
   const classes = useStyles();
-  const actionMenuOpenHandler = (record) => (e) => {
-    setSelected(record);
-    setMenuAnchor(e.currentTarget);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+ 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isOpen = Boolean(anchorEl);
   const navigate = useNavigate();
   const addHandler = () => {
     navigate(paths.getRegisterStudents());
@@ -130,12 +143,36 @@ const Create_Student = () => {
       name: "Actions",
       selector: (row) => (
         <>
-          <IconButton onClick={() => actionEdit(row?.id)}>
-            <EditIcon />
+          <IconButton
+            aria-label="more"
+            onClick={handleClick}
+            aria-expanded={isOpen ? 'true' : undefined}
+            aria-haspopup="true"
+            aria-controls="long-menu"
+          >
+            <MoreVertRounded/>
           </IconButton>
-          <IconButton onClick={() => actionDelete(row?.id)}>
-            <DeleteIcon />
-          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            aria-expanded={isOpen ? 'true' : undefined}
+            open={isOpen}
+            style={{width: '15ch',}}
+            elevation={2}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            {/* <MenuItem className={classes.vertItem} disableRipple> */}
+              <IconButton onClick={() => actionEdit(row?.id)}>
+                <EditIcon /> 
+              </IconButton>
+            {/* </MenuItem> */}
+              {/* <MenuItem className={classes.vertItem} > */}
+              <IconButton onClick={() => actionDelete(row?.id)}>
+                <DeleteIcon /> 
+              </IconButton>
+            {/* </MenuItem> */}
+          </Menu>
         </>
       ),
       ignoreRowClick: true,

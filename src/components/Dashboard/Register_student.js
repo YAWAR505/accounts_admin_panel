@@ -137,6 +137,7 @@ const Create_Signup = () => {
           ? await updateDoc(doc(db, "Students", param.id), {
               name: values.name,
               ClassName: values.ClassName,
+              rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
             })
           : await addDoc(collection(db, "Students"), {
               ...values,
@@ -179,12 +180,13 @@ const Create_Signup = () => {
               onChange={formik.handleChange}
               value={formik.values.name}
               // error={formik.touched.name && Boolean(formik.errors.name)}
-              // helperText={formik.touched.name && formik.errors.name}
+              // helperText={formik.touched.namefalse && formik.errors.name}
             >
               {users.map((course) => (
                 <MenuItem
                   value={course.name}
-                  disabled={students.some((item) => item.name === course.name)}
+                  disabled={state ? false :students.some((item) => item.name === course.name)}
+                  
                 >
                   {course.name}
                 </MenuItem>
