@@ -17,12 +17,11 @@ import { db } from "../../firebase";
 import moment from "moment";
 import { CSVLink } from "react-csv";
 import TransactionPdf from "./TransactionPdf";
-import clsx from "clsx";
-import { DateRangePicker } from "rsuite";
 import { jsPDF } from "jspdf";
 import { renderToString } from "react-dom/server";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-
+import myimage from "../../images/myimage.jpg";
+import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import Widget from "./Widget";
 const useStyles = makeStyles(() => ({
@@ -68,9 +67,9 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
   const [q, setQ] = useState("");
-  console.log(FilteredData)
+  console.log(FilteredData);
   useEffect(() => {
-    const q = query( collection(db, "PayFee"),orderBy("studentName" ,"desc"));
+    const q = query(collection(db, "PayFee"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const Transactions = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -87,7 +86,8 @@ const Transactions = () => {
     const html = renderToString(<TransactionPdf row={row} />);
     pdf.html(html, {
       callback: function (pdf) {
-        pdf.save("Invoice.pdf");
+        pdf.addImage(myimage, "JPEG", 30, 40, 60, 40);
+        pdf.save(`${row.studentName}.pdf`);
       },
       html2canvas: { scale: 0.6 },
       x: 10,
@@ -102,7 +102,7 @@ const Transactions = () => {
       name: "S.No",
       selector: (row) => row.user_id,
       sortable: true,
-      reorder: true,
+      reorder: false,
     },
     {
       name: "Name",
@@ -125,7 +125,7 @@ const Transactions = () => {
         <Button
           size="small"
           style={{
-            textTransform: 'none',
+            textTransform: "none",
             backgroundColor:
               row.feeType === "monthly_fee" || row.feeType === "admission"
                 ? "#029904"
@@ -254,7 +254,8 @@ const Transactions = () => {
           data={FilteredData}
           striped
           highlightOnHover
-          defaultSortFieldId={1}
+          defaultSortAsc={false}
+          // defaultSortFieldId={1}
           pagination
         />
       </Paper>
@@ -263,26 +264,3 @@ const Transactions = () => {
   );
 };
 export default Transactions;
-
-// var homes = [{
-//   "h_id": "3",
-//   "city": "Dallas",
-//   "state": "TX",
-//   "zip": "75201",
-//   "price": "162500"
-// }, {
-//   "h_id": "4",
-//   "city": "Bevery Hills",
-//   "state": "CA",
-//   "zip": "90210",
-//   "price": "319250"
-// }, {
-//   "h_id": "5",
-//   "city": "New York",
-//   "state": "NY",
-//   "zip": "00010",
-//   "price": "962500"
-// }];
-
-// homes.sort((a, b) => Number(b.price) - Number(a.price));
-// console.log("ascending", homes);

@@ -119,7 +119,7 @@ const Create_Courses = () => {
   };
 
   useEffect(() => {
-    const q = query(collection(db, "addCourse"), orderBy("timestamp", "desc"));
+    const q = query(collection(db, "addCourse"),orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const getCourse = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -245,8 +245,6 @@ const Create_Courses = () => {
           }
           columns={columns}
           data={FilteredData}
-          defaultSortField="id"
-          defaultSortAsc={false}
           striped
           highlightOnHover
           pagination

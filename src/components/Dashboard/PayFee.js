@@ -145,7 +145,7 @@ const PayFee = () => {
 
   useEffect(() => {
     const FilteredUsers = users.filter(
-      (item) => item.name === formik.values.studentName
+      (item) => item.firstName === formik.values.studentName
     );
     const filtered = student.filter(
       (item) => item.name === formik.values.studentName
@@ -228,8 +228,8 @@ const PayFee = () => {
             <Grid container spacing={2}>
               <Grid item md={6} xs={12}>
                 <ListItem className={classes.listItemstext}>
-                  <Typography variant="h6">Name:-</Typography>
-                  <Typography>{item.name}</Typography>
+                  <Typography variant="h6">First Name:-</Typography>
+                  <Typography>{item.firstName}</Typography>
                 </ListItem>
                 <ListItem className={classes.listItemstext}>
                   <Typography variant="h6"> Email:- </Typography>

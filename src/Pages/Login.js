@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,9 +12,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useFormik } from "formik";
-import { ToastContainer } from "react-toastify";
-import { signinInitiate } from "../redux/Action";
+import { toast, ToastContainer } from "react-toastify";
+import { signinInitiate,signinFail } from "../redux/Action";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import * as types from "../redux/actionTypes";
+
+import { auth } from "../firebase";
 const usestyles = makeStyles(() => ({
   login: {
     width: "100%",
@@ -37,11 +40,12 @@ const Login = () => {
   const classes = usestyles();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const { error} = useSelector((state) => state.reducer);
 
-  const { error } = useSelector((state) => state.reducer);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const validationSchema = yup.object({
     email: yup
       .string("Enter your email")
@@ -53,13 +57,11 @@ const Login = () => {
       .required("Password is required"),
   });
 
-  // useEffect(() => {
-  //   if (error) {
-  //       toast.error("Please check the Password")
-  //     }   else {
-  //        toast.success("Login Successfully")
-  //     }
-  // }, [error]);
+// useEffect(() => {
+// const iserror =  !error ? toast.error("failed to login"):toast.success("Your password")
+// return iserror
+// }, [error])
+
 
   const formik = useFormik({
     initialValues: {
@@ -69,7 +71,6 @@ const Login = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       dispatch(signinInitiate(values.email, values.password));
-      //  toast.error("username or password is wrong ")
     },
   });
 

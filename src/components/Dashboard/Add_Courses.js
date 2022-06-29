@@ -82,7 +82,7 @@ const Add_Courses = () => {
           state ? "Class Updated Successful" : " Class Added Successful"
         );
 
-        state
+        state 
           ? await updateDoc(doc(db, "addCourse", param.id), {
               class: values.class,
               AdmissionFee: values.AdmissionFee,

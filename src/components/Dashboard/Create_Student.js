@@ -15,6 +15,7 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  orderBy,
   query,
 } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -47,8 +48,6 @@ const Create_Student = () => {
   const [FilteredData, setFilteredData] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-
- 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -63,7 +62,7 @@ const Create_Student = () => {
     navigate(paths.getRegisterStudents());
   };
   useEffect(() => {
-    const q = query(collection(db, "Students"));
+    const q = query(collection(db, "Students"), orderBy("timestamp","desc"));
     const unsubscribe = onSnapshot(q, (Snapshot) => {
       const tasks = Snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -115,7 +114,6 @@ const Create_Student = () => {
     {
       name: "Roll No",
       selector: (row) => row.rollNo,
-      sortable: true,
       reorder: false,
     },
     {
@@ -129,16 +127,6 @@ const Create_Student = () => {
       selector: (row) => row.ClassName,
       reorder: false,
     },
-
-    // {
-    //   name: "Fee Status",
-    //   selector: (row) => (
-    //     <Typography variant="subtitle2" color="primary">
-    //       Paid
-    //     </Typography>
-    //   ),
-    //   reorder: false,
-    // },
     {
       name: "Actions",
       selector: (row) => (
@@ -209,9 +197,9 @@ const Create_Student = () => {
           }
           columns={columns}
           data={FilteredData}
+          defaultSortAsc={false}
           striped
           highlightOnHover
-          defaultSortFieldId={1}
           pagination
         />
       </Card>

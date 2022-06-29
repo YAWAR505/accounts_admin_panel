@@ -156,7 +156,7 @@ const Create_Signup = () => {
   });
   useEffect(() => {
     const FilteredUsers = users.filter(
-      (item) => item.name === formik.values.name
+      (item) => item.firstName === formik.values.name
     );
     setUsersData(FilteredUsers);
   }, [formik.values.name, users]);
@@ -184,11 +184,10 @@ const Create_Signup = () => {
             >
               {users.map((course) => (
                 <MenuItem
-                  value={course.name}
-                  disabled={state ? false :students.some((item) => item.name === course.name)}
-                  
+                  value={course.firstName}
+                  disabled={state ? false :students.some((item) => item.name === course.firstName)}
                 >
-                  {course.name}
+                  {course.firstName}
                 </MenuItem>
               ))}
             </TextField>
@@ -217,8 +216,8 @@ const Create_Signup = () => {
                 <Grid container spacing={2}>
                   <Grid item md={6} xs={12}>
                     <ListItem>
-                      <ListItemText> Name:- </ListItemText>
-                      <ListItemText> {item.name} </ListItemText>
+                      <ListItemText> First Name:- </ListItemText>
+                      <ListItemText> {item.firstName} </ListItemText>
                     </ListItem>
                     <ListItem>
                       <ListItemText> Email:- </ListItemText>
@@ -234,10 +233,14 @@ const Create_Signup = () => {
                     </ListItem>
                   </Grid>
                   <Grid item md={6} xs={12}>
+                  <ListItem>
+                      <ListItemText> Last Name:- </ListItemText>
+                      <ListItemText> {item.lastName} </ListItemText>
+                    </ListItem>
                     <ListItem>
                       <ListItemText>Phone Number:- </ListItemText>
                       <ListItemText>
-                        {item.userDetails.PhoneNumber}{" "}
+                        {item.userDetails.PhoneNumber}
                       </ListItemText>
                     </ListItem>
                     <ListItem>

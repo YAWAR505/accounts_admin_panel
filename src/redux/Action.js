@@ -18,9 +18,9 @@ export const signinFail = (error) => ({
   payload: error,
 });
 
-export const signinInitiate = (email, password) =>  (dispatch) => {
+export const signinInitiate = (email, password) =>  async(dispatch) => {
   try {
-    const user =  signInWithEmailAndPassword(auth, email, password);
+    const user =  await signInWithEmailAndPassword(auth, email, password);
     dispatch(signinSuccess(user.user));
   } catch (error) {
     dispatch(signinFail(error.message));
