@@ -5,9 +5,7 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  List,
   ListItem,
-  ListItemText,
   makeStyles,
   MenuItem,
   TextField,
@@ -71,6 +69,8 @@ const PayFee = () => {
   const [isMonth, setIsMonth] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [saveData, setsaveData] = useState([]);
+
+ 
   useEffect(() => {
     const q = query(collection(db, "Users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -328,9 +328,10 @@ const PayFee = () => {
                   {FEE_TYPES.map((fee) => (
                     <MenuItem
                       value={fee.value}
-                      disabled={transactions.some(
-                        (item) => item.feeType === fee.value
-                      )}
+                      disabled={transactions.some( (item) =>{
+                        return ( 
+                   item.feeType === fee.value);
+                      })}
                     >
                       {fee.label}
                     </MenuItem>
@@ -354,7 +355,7 @@ const PayFee = () => {
                     // helperText={formik.touched.firstName && formik.errors.firstName}
                   >
                     {MONTHS.map((month) => (
-                      <MenuItem value={month.value}>{month.label}</MenuItem>
+                      <MenuItem value={month.value} disabled={saveData.some((item) => item.Month === month.label)}>{month.label}</MenuItem>
                     ))}
                   </TextField>
                 </Grid>

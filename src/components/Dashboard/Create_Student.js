@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  Grid,
   IconButton,
   makeStyles,
   Menu,
@@ -34,6 +35,9 @@ const useStyles = makeStyles(() => ({
    },
   search: {
     marginTop: "10px",
+    display:"flex",
+    width: "100%",
+    justifyContent:"space-between",
    },
   vertItem:{
   
@@ -48,6 +52,8 @@ const Create_Student = () => {
   const [FilteredData, setFilteredData] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [search,setSearch] = useState("")
+  const [course,setCourse]=useState([]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -73,6 +79,17 @@ const Create_Student = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const q = query(collection(db, "addCourse"),orderBy("timestamp","asc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tasks = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCourse(tasks);
+    });
+    return () => unsubscribe();
+  }, []);
   const actionDelete = async (id) => {
     swal({
       title: "Are you sure?",
@@ -175,6 +192,15 @@ const Create_Student = () => {
     const value = user.filter((item) => item.name.toLowerCase().includes(q));
     setFilteredData(value);
   }, [q, user]);
+  const handleSearchByclass =(e)=> {
+    setSearch(e.target.value);
+
+  }
+  useEffect(() => {
+    const value = user.filter((item) => item.ClassName.toLowerCase().includes(search));
+
+    setFilteredData(value);
+  }, [search, user]);
   return (
     <Box>
       <Card>
@@ -186,14 +212,40 @@ const Create_Student = () => {
         </Box>
         <DataTable
           actions={
-            <Box className={classes.search}>
+            <Grid container spacing={2} className={classes.search}>
+              <Grid item md={6} xs={12}>
+
               <TextField
-                label="Search"
+                label="Search By Name"
                 variant="outlined"
                 value={q}
+                fullWidth
+
                 onChange={handleSearch}
               />
-            </Box>
+            </Grid>
+
+              <Grid item md={6} xs={12}>
+
+              <TextField
+                label="Search by Class"
+                variant="outlined"
+                value={search}
+                fullWidth
+                select
+                onChange={handleSearchByclass}
+              >
+                {course.map((course) => (
+                <MenuItem
+                  value={course.class}
+                >
+                  {course.class}
+                </MenuItem>
+              ))}
+                </TextField>
+            </Grid>
+
+            </Grid>
           }
           columns={columns}
           data={FilteredData}

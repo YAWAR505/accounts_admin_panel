@@ -16,7 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Manu from "./Manu-items/Manu_Items";
-import { Button, makeStyles } from "@material-ui/core";
+import { Button, Grid, makeStyles } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
 import { paths } from "./Routes/paths";
@@ -28,13 +28,16 @@ const usestyles = makeStyles(() => ({
     textDecoration: "none",
     color: "#fff",
     display: "flex",
+    alignItems: "center",
+    paddingLeft: "15px",
     "&:hover": {
       textDecoration: "none",
       color: "#fff",
     },
+  
   },
   icons: {
-    color: "green",
+    color: "#2ebf30",
   },
   logoutBtn: {
     backgroundColor: "#029904",
@@ -124,9 +127,8 @@ const Create_Drawer = () => {
       }
     });
   };
-
   let activeStyle = {
-    color: "#029904",
+    color: "#2ebf30",
     textDecoration: "none",
   };
   return (
@@ -138,7 +140,7 @@ const Create_Drawer = () => {
           }}
         >
           {open ? (
-            <IconButton onClick={handleDrawerClose} sx={{ color: "#029904" }}>
+            <IconButton onClick={handleDrawerClose} sx={{ color: "#2ebf30" }}>
               <ChevronLeftIcon />
             </IconButton>
           ) : (
@@ -180,16 +182,14 @@ const Create_Drawer = () => {
         anchor="left"
         open={open}
       >
-        <Divider />
         <DrawerHeader>
           <IconButton size="large">
             <AccountCircleIcon sx={{ fontSize: 60 }} color="primary" />
           </IconButton>
         </DrawerHeader>
-        <Divider sx={{ backgroundColor: "#c6c6c6" }} />
-        <List>
+        <Grid container spacing={2} layout>
           {Manu.map((manu, index) => (
-            <ListItem button key={index} className={classes.listitem}>
+            <Grid  item button key={index} xs={12} >
               <NavLink
                 to={manu.path}
                 className={classes.navlink}
@@ -201,11 +201,11 @@ const Create_Drawer = () => {
                 >
                   {manu.icon}
                 </ListItemIcon>
-                <ListItemText primary={manu.title} />
+                <ListItemText primary={manu.title}/>
               </NavLink>
-            </ListItem>
+            </Grid>
           ))}
-        </List>
+        </Grid>
         <Divider sx={{ backgroundColor: "#c6c6c6" }} />
       </Drawer>
       <Main open={open} className={classes.main}>

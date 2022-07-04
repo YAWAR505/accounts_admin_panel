@@ -238,7 +238,7 @@ const Transactions = () => {
         </Grid>
         <Grid item md={6} xs={12}>
           <TextField
-            label="Search"
+            label="Search By Name"
             variant="outlined"
             size="small"
             value={q}
