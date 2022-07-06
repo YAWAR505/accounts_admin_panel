@@ -1,11 +1,13 @@
 import {
   Box,
   Card,
+  CircularProgress,
   Grid,
   IconButton,
   makeStyles,
   Menu,
   MenuItem,
+  Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -29,22 +31,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import swal from "sweetalert";
 const useStyles = makeStyles(() => ({
-  
   typo: {
     marginLeft: "10px",
-   },
+  },
   search: {
     marginTop: "10px",
-    display:"flex",
+    display: "flex",
     width: "100%",
-    justifyContent:"space-between",
-   },
-  vertItem:{
-  
-  
+    marginBottom:"10px",
+    justifyContent: "space-between",
   },
- 
-
+  vertItem: {},
 }));
 const Create_Student = () => {
   const [user, setUser] = useState([]);
@@ -52,8 +49,10 @@ const Create_Student = () => {
   const [FilteredData, setFilteredData] = useState([]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [search,setSearch] = useState("")
-  const [course,setCourse]=useState([]);
+  const [search, setSearch] = useState("");
+  const [course, setCourse] = useState([]);
+  const [pending, setPending] = useState(true);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,7 +67,7 @@ const Create_Student = () => {
     navigate(paths.getRegisterStudents());
   };
   useEffect(() => {
-    const q = query(collection(db, "Students"), orderBy("timestamp","desc"));
+    const q = query(collection(db, "Students"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (Snapshot) => {
       const tasks = Snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -80,7 +79,7 @@ const Create_Student = () => {
   }, []);
 
   useEffect(() => {
-    const q = query(collection(db, "addCourse"),orderBy("timestamp","asc"));
+    const q = query(collection(db, "addCourse"), orderBy("timestamp", "asc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const tasks = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -151,31 +150,31 @@ const Create_Student = () => {
           <IconButton
             aria-label="more"
             onClick={handleClick}
-            aria-expanded={isOpen ? 'true' : undefined}
+            aria-expanded={isOpen ? "true" : undefined}
             aria-haspopup="true"
             aria-controls="long-menu"
           >
-            <MoreVertRounded/>
+            <MoreVertRounded />
           </IconButton>
           <Menu
             anchorEl={anchorEl}
             onClose={handleClose}
-            aria-expanded={isOpen ? 'true' : undefined}
+            aria-expanded={isOpen ? "true" : undefined}
             open={isOpen}
-            style={{width: '15ch',}}
+            style={{ width: "15ch" }}
             elevation={2}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             {/* <MenuItem className={classes.vertItem} disableRipple> */}
-              <IconButton onClick={() => actionEdit(row?.id)}>
-                <EditIcon /> 
-              </IconButton>
+            <IconButton onClick={() => actionEdit(row?.id)}>
+              <EditIcon />
+            </IconButton>
             {/* </MenuItem> */}
-              {/* <MenuItem className={classes.vertItem} > */}
-              <IconButton onClick={() => actionDelete(row?.id)}>
-                <DeleteIcon /> 
-              </IconButton>
+            {/* <MenuItem className={classes.vertItem} > */}
+            <IconButton onClick={() => actionDelete(row?.id)}>
+              <DeleteIcon />
+            </IconButton>
             {/* </MenuItem> */}
           </Menu>
         </>
@@ -192,69 +191,67 @@ const Create_Student = () => {
     const value = user.filter((item) => item.name.toLowerCase().includes(q));
     setFilteredData(value);
   }, [q, user]);
-  const handleSearchByclass =(e)=> {
+  const handleSearchByclass = (e) => {
     setSearch(e.target.value);
-
-  }
+  };
   useEffect(() => {
-    const value = user.filter((item) => item.ClassName.toLowerCase().includes(search));
-
-    setFilteredData(value);
+    const value = user.filter((item) =>
+      item.ClassName.toLowerCase().includes(search)
+    );
+    const timeout = setTimeout(() => {
+      setFilteredData(value);
+      setPending(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
   }, [search, user]);
   return (
     <Box>
-      <Card>
         <Box display="flex" alignItems="center" className={classes.typo}>
           <Typography variant="h5"> Students </Typography>
           <IconButton onClick={addHandler} color="primary">
             <AddCircleOutlineIcon />
           </IconButton>
         </Box>
-        <DataTable
-          actions={
-            <Grid container spacing={2} className={classes.search}>
-              <Grid item md={6} xs={12}>
+        <Grid container spacing={2} className={classes.search}>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Search By Name"
+              variant="outlined"
+              value={q}
+              fullWidth
+              onChange={handleSearch}
+            />
+          </Grid>
 
-              <TextField
-                label="Search By Name"
-                variant="outlined"
-                value={q}
-                fullWidth
-
-                onChange={handleSearch}
-              />
-            </Grid>
-
-              <Grid item md={6} xs={12}>
-
-              <TextField
-                label="Search by Class"
-                variant="outlined"
-                value={search}
-                fullWidth
-                select
-                onChange={handleSearchByclass}
-              >
-                {course.map((course) => (
-                <MenuItem
-                  value={course.class}
-                >
-                  {course.class}
-                </MenuItem>
+          <Grid item md={6} xs={12}>
+            <TextField
+              label="Search by Class"
+              variant="outlined"
+              value={search}
+              fullWidth
+              select
+              onChange={handleSearchByclass}
+            >
+              {course.map((course) => (
+                <MenuItem value={course.class}>{course.class}</MenuItem>
               ))}
-                </TextField>
-            </Grid>
+            </TextField>
+          </Grid>
+        </Grid>
+      
 
-            </Grid>
-          }
+      <Paper elevation={3} >
+        <DataTable
           columns={columns}
           data={FilteredData}
           defaultSortAsc={false}
+          progressPending={pending}
+          progressComponent={<CircularProgress />}
           striped
           highlightOnHover
           pagination
         />
-      </Card>
+        </Paper>
     </Box>
   );
 };

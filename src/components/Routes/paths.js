@@ -1,6 +1,5 @@
 export const paths = {
   getRoot: () => "/",
-  getUsers: () => "/user",
   getCourses: () => "/courses",
   getStudents: () => "/student",
   getRegisterStudentsEdit: (id) => `/student/edit/${id}`,
@@ -11,5 +10,7 @@ export const paths = {
   getPayFee: () => "/pay_fee",
   getTransactions: () => "/transactions",
   getLogin: () => "/login",
-  getUsersList: () => "/user_list",
+  getRegisterUsers: () => "/user/register",
+  getUsersEdit: (id) => `/user/edit/${id}`,
+  getUsersList: () => "/users",
 };

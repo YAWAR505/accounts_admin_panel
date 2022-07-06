@@ -14,7 +14,7 @@ const Manu = [
     icon: <DashboardIcon />,
   },
   {
-    path: paths.getUsers(),
+    path: paths.getUsersList(),
     title: "Users",
     icon: <GroupIcon />,
     

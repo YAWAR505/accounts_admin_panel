@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 // import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import * as Yup from "yup";
-import { Formik, getIn } from "formik";
+import { Formik, getIn, useFormik } from "formik";
 import {
   Card,
   CardHeader,
@@ -14,33 +14,41 @@ import {
   TextField,
   Button,
   MenuItem,
+  InputAdornment,
+  IconButton,
+  Paper,
+  Box,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { hanldSignup } from "../../redux/Action";
-import { Navigate, useNavigate } from "react-router-dom";
-import { paths } from "../Routes/paths";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/material.css";
+import { usePlacesWidget } from "react-google-autocomplete";
+import { MuiTelInput } from "mui-tel-input";
+import axios from "axios";
+import { useLocation, useParams } from "react-router-dom";
 const ROLL_TYPE = [
   {
     label: "Student",
-  },
-  {
-    label: "Admin",
   },
 ];
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
-    height: "100%",
+    height: "100vh",
   },
   actions: {
-    justifyContent: "flex-end",
+    justifyContent: "center",
+  },
+  phone: {
+    width: "100%",
   },
 }));
 
 const Users = () => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -55,11 +63,41 @@ const Users = () => {
       Address: "",
     },
   };
+  const location = useLocation();
+  const [state] = useState(location.state);
+  const param = useParams();
+  const classes = useStyles();
+  const dispatch = useDispatch();
+console.log(state,"state");
+  // useEffect(() => {
+  //   setInitialValues({
+  //     firstName: state?.fatherName,
+  //     lastName: state?.lastName,
+  //     email: state?.email,
+  //     password: state?.password,
+  //     confirmPassword: state?.confirmPassword,
+  //     role: state?.role,
+  //     userDetails: {
+  //       fatherName: state?.fatherName,
+  //       motherName: state?.motherName,
+  //       PhoneNumber: state?.PhoneNumber,
+  //       Address: state?.Address,
+  //     }
+  //   });
+  // }, [state, param]);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  const toggleConfirmShowPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+  
+ 
 
   return (
-    <Card className={clsx(classes.root)}>
+    <Box className={clsx(classes.root)}>
       <CardHeader title="Register User" />
-      <Divider />
       <Formik
         initialValues={{
           ...initialValues,
@@ -102,6 +140,7 @@ const Users = () => {
           handleChange,
           handleSubmit,
           isSubmitting,
+          setFieldValue,
           isValid,
           dirty,
           touched,
@@ -113,6 +152,7 @@ const Users = () => {
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.firstName && errors.firstName)}
+                     
                     fullWidth
                     required
                     helperText={touched.firstName && errors.firstName}
@@ -123,12 +163,12 @@ const Users = () => {
                     type="text"
                     value={values.firstName}
                     variant="outlined"
-                    size="small"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.lastName && errors.lastName)}
+                   
                     fullWidth
                     required
                     helperText={touched.lastName && errors.lastName}
@@ -139,14 +179,15 @@ const Users = () => {
                     type="text"
                     value={values.lastName}
                     variant="outlined"
-                    size="small"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.role && errors.role)}
+                 
                     fullWidth
                     required
+                    error={Boolean(touched.role && errors.role)}
+
                     helperText={touched.role && errors.role}
                     label="Role"
                     name="role"
@@ -156,7 +197,6 @@ const Users = () => {
                     type="text"
                     value={values.role}
                     variant="outlined"
-                    size="small"
                   >
                     {ROLL_TYPE.map((item) => (
                       <MenuItem value={item.label}>{item.label}</MenuItem>
@@ -166,9 +206,10 @@ const Users = () => {
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.email && errors.email)}
+                    helperText={touched.email && errors.email}
+                 
                     fullWidth
                     required
-                    helperText={touched.email && errors.email}
                     label="Email"
                     name="email"
                     onBlur={handleBlur}
@@ -176,23 +217,35 @@ const Users = () => {
                     type="text"
                     value={values.email}
                     variant="outlined"
-                    size="small"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.password && errors.password)}
+                       
                     fullWidth
                     required
+                    error={Boolean(touched.password && errors.password)}
                     helperText={touched.password && errors.password}
                     label="Password"
                     name="password"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={values.password}
                     variant="outlined"
-                    size="small"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={toggleShowPassword}
+                            onMouseDown={(e) => e.preventDefault()}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -200,6 +253,7 @@ const Users = () => {
                     error={Boolean(
                       touched.confirmPassword && errors.confirmPassword
                     )}
+                 
                     fullWidth
                     required
                     helperText={
@@ -209,15 +263,30 @@ const Users = () => {
                     name="confirmPassword"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     value={values.confirmPassword}
                     variant="outlined"
-                    size="small"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={toggleConfirmShowPassword}
+                            onMouseDown={(e) => e.preventDefault()}
+                          >
+                            {showConfirmPassword ? (
+                              <VisibilityOff />
+                            ) : (
+                              <Visibility />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </Grid>
               </Grid>
             </CardContent>
-            <Divider />
             <CardHeader title="User Details" />
             <CardContent>
               <Grid container spacing={2}>
@@ -240,14 +309,13 @@ const Users = () => {
                     type="text"
                     value={values.userDetails.fatherName}
                     variant="outlined"
-                    size="small"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(
                       getIn(touched, "userDetails.motherName") &&
-                        getIn(errors, "userDetails.motherName")
+                      getIn(errors, "userDetails.motherName")
                     )}
                     fullWidth
                     required
@@ -262,31 +330,39 @@ const Users = () => {
                     type="text"
                     value={values.userDetails.motherName}
                     variant="outlined"
-                    size="small"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
-                    error={Boolean(
-                      getIn(touched, "userDetails.PhoneNumber") &&
-                        getIn(errors, "userDetails.PhoneNumber")
-                    )}
-                    fullWidth
-                    required
-                    helperText={
-                      getIn(touched, "userDetails.PhoneNumber") &&
-                      getIn(errors, "userDetails.PhoneNumber")
-                    }
-                    label="PhoneNumber"
-                    name="userDetails.PhoneNumber"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
+              
+                  <PhoneInput
+                    country="in"
+                    enableSearch={true}
+                    specialLabel=""
                     value={values.userDetails.PhoneNumber}
-                    variant="outlined"
-                    size="small"
+                    onChange={(phone) =>
+                      setFieldValue("userDetails.PhoneNumber", phone)
+                    }
+                    inputStyle={{ width: "100%", height: "55px" }}
+                    // error={Boolean(
+                    //     getIn(touched, "userDetails.Address") &&
+                    //     getIn(errors, "userDetails.Address")
+                    // )}
+                    // helperText={
+                    //   getIn(touched, "userDetails.PhoneNumber") &&
+                    //   getIn(errors, "userDetails.PhoneNumber")
+                    // }
+                    isValid={(value, country) => {
+                      if (value.match(/12345/)) {
+                        return "Invalid value: " + value + ", " + country.name;
+                      } else if (value.match(/1234/)) {
+                        return false;
+                      } else {
+                        return true;
+                      }
+                    }}
                   />
                 </Grid>
+
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(
@@ -306,7 +382,6 @@ const Users = () => {
                     type="text"
                     value={values.userDetails.Address}
                     variant="outlined"
-                    size="small"
                   />
                 </Grid>
               </Grid>
@@ -322,14 +397,10 @@ const Users = () => {
               </Button>
             </CardActions>
           </form>
-        )}
+         )} 
       </Formik>
-    </Card>
-  );
+    </Box>
+  )
 };
-
-// SignUpForm.propTypes = {
-//   className: PropTypes.string,
-// };
 
 export default Users;

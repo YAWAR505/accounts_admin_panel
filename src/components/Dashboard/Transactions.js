@@ -1,8 +1,10 @@
 import {
+  Badge,
   Box,
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Grid,
   IconButton,
   makeStyles,
@@ -54,7 +56,7 @@ const useStyles = makeStyles(() => ({
   },
   search: {
     margin: "10px 0",
-    width: "50%",
+    width: "100%",
     display: "flex",
     justifyContent: "space-between",
   },
@@ -66,6 +68,8 @@ const Transactions = () => {
   const classes = useStyles();
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
+  const [pending, setPending] = useState(true)
+
   const [q, setQ] = useState("");
   console.log(FilteredData);
   useEffect(() => {
@@ -122,10 +126,10 @@ const Transactions = () => {
     {
       name: "Fee Status",
       selector: (row) => (
-        <Button
-          size="small"
+        <Badge
           style={{
-            textTransform: "none",
+            padding: '8px 15px',
+            borderRadius: '5px',
             backgroundColor:
               row.feeType === "monthly_fee" || row.feeType === "admission"
                 ? "#029904"
@@ -136,7 +140,7 @@ const Transactions = () => {
           {row.feeType === "monthly_fee" || row.feeType === "admission"
             ? "Paid"
             : "Pending"}
-        </Button>
+        </Badge>
       ),
       reorder: false,
       button: true,
@@ -171,7 +175,12 @@ const Transactions = () => {
     const value = transactions.filter((item) =>
       item.studentName.toLowerCase().includes(q)
     );
+    const timeout = setTimeout(() => {
+    
     setFilteredData(value);
+    setPending(false);
+  }, 1000);
+  return () => clearTimeout(timeout);
   }, [q, transactions]);
 
   const hanldeDateChange = (startDate) => {
@@ -193,10 +202,10 @@ const Transactions = () => {
     setFilteredData(dateValues);
   };
 
-  const styles = { width: 260 };
+  const styles = { width: 500 };
   return (
-    <Box>
-      <Box mb={2}>
+    <Box mt={2}>
+      <Box mb={2} >
         <Grid container spacing={2}>
           <Grid xs={12} md={3}>
             <Widget type="todaysPayment" />
@@ -225,9 +234,8 @@ const Transactions = () => {
           Export CSV
         </CSVLink>
       </div>
-      {/* <Card className={clsx(classes.root)} variant="outlined"> */}
-      {/* <CardContent> */}
-      <Grid spacing={2} className={classes.search}>
+ 
+      <Grid container spacing={2} className={classes.search}>
         <Grid item md={6} xs={12}>
           <DateRangePicker
             size="lg"
@@ -241,13 +249,13 @@ const Transactions = () => {
             label="Search By Name"
             variant="outlined"
             size="small"
+            fullWidth
             value={q}
             onChange={handleSearch}
           />
         </Grid>
       </Grid>
-      {/* </CardContent> */}
-      {/* </Card> */}
+
       <Paper elevation={3}>
         <DataTable
           columns={columns}
@@ -255,7 +263,8 @@ const Transactions = () => {
           striped
           highlightOnHover
           defaultSortAsc={false}
-          // defaultSortFieldId={1}
+          progressPending={pending}
+          progressComponent={ <CircularProgress/> }
           pagination
         />
       </Paper>

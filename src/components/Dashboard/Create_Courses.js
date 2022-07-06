@@ -7,6 +7,7 @@ import {
   makeStyles,
   Menu,
   MenuItem,
+  Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -32,6 +33,9 @@ import "react-data-table-component-extensions/dist/index.css";
 import { paths } from "../Routes/paths";
 import { toast, ToastContainer } from "react-toastify";
 import swal from "sweetalert";
+import Loader from "../Constants/Loader";
+import CircularProgress from '@mui/material/CircularProgress';
+
 const useStyles = makeStyles(() => ({
   title: {
     zIndex: 999,
@@ -74,6 +78,7 @@ const Create_Courses = () => {
   const [FilteredData, setFilteredData] = useState([]);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [pending, setPending] = useState(true)
   const [q, setQ] = useState("");
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -207,12 +212,17 @@ const Create_Courses = () => {
     const value = data.filter((item) =>
       item.Class_Code.toLowerCase().includes(q)
     );
+    const timeout = setTimeout(() => {
     setFilteredData(value);
+    setPending(false);
+  }, 1000);
+  return () => clearTimeout(timeout);
   }, [q, data]);
+
+
   return (
     <Box>
-      <ToastContainer />
-      <Card>
+     
         <div className={classes.csvFileParent}>
           <Box display="flex" alignItems="center" className={classes.typo}>
             <Typography variant="h5"> Courses </Typography>
@@ -230,10 +240,7 @@ const Create_Courses = () => {
             Export CSV
           </CSVLink>
         </div>
-
-        <DataTable
-          actions={
-            <Box className={classes.search}>
+        <Box className={classes.search}>
               {/* <RangePicker onDateChanges={onDateChanges} /> */}
               <TextField
                 label="Search"
@@ -242,14 +249,18 @@ const Create_Courses = () => {
                 onChange={handleSearch}
               />
             </Box>
-          }
+        <Paper elevation={3}>
+        <DataTable
           columns={columns}
           data={FilteredData}
           striped
+          progressPending={pending}
+          progressComponent={ <CircularProgress/> }
           highlightOnHover
           pagination
         />
-      </Card>
+        </Paper>
+    
     </Box>
   );
 };

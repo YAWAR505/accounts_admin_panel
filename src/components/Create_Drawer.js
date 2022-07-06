@@ -4,13 +4,13 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
+
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
+import LogoutIcon from '@mui/icons-material/Logout';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
@@ -42,6 +42,9 @@ const usestyles = makeStyles(() => ({
   logoutBtn: {
     backgroundColor: "#029904",
     color: "#fff",
+    textTransform: "none",
+    width: 130,
+    margin:'0 auto',
     "&:hover": {
       backgroundColor: "#029904",
     },
@@ -51,7 +54,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
     flexGrow: 1,
 
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -123,7 +126,7 @@ const Create_Drawer = () => {
           icon: "success",
         });
       } else {
-        swal("Your imaginary file is safe!");
+        swal("You are not logged Out!");
       }
     });
   };
@@ -154,25 +157,26 @@ const Create_Drawer = () => {
             </IconButton>
           )}
 
-          <Box display="flex" justifyContent="space-between" width="100%">
+          <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
             <Typography variant="h6" noWrap>
-              Accounts Dashboard
+               Dashboard
             </Typography>
-            <Button
-              variant="contained"
-              className={classes.logoutBtn}
-              onClick={signoutHanlder}
-            >
-              Logout
-            </Button>
+            <IconButton size="large">
+            <AccountCircleIcon sx={{ fontSize: 40 }} color="primary" />
+          </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
+         
           flexShrink: 0,
           "& .MuiDrawer-paper": {
+            display: 'flex',
+            flexDirection: 'column',
+            padding:"40px 0",
+            justifyContent: 'space-between',
             backgroundColor: "#242426",
             width: drawerWidth,
             boxSizing: "border-box",
@@ -182,12 +186,8 @@ const Create_Drawer = () => {
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
-          <IconButton size="large">
-            <AccountCircleIcon sx={{ fontSize: 60 }} color="primary" />
-          </IconButton>
-        </DrawerHeader>
-        <Grid container spacing={2} layout>
+      
+        <Grid container spacing={2} >
           {Manu.map((manu, index) => (
             <Grid  item button key={index} xs={12} >
               <NavLink
@@ -203,12 +203,21 @@ const Create_Drawer = () => {
                 </ListItemIcon>
                 <ListItemText primary={manu.title}/>
               </NavLink>
+
             </Grid>
           ))}
+         
         </Grid>
-        <Divider sx={{ backgroundColor: "#c6c6c6" }} />
+        <Button
+            startIcon={<LogoutIcon/>}
+              variant="contained"
+              className={classes.logoutBtn}
+              onClick={signoutHanlder}
+            >
+              Logout
+      </Button>
       </Drawer>
-      <Main open={open} className={classes.main}>
+      <Main open={open} >
         <DrawerHeader />
         <Outlet />
       </Main>

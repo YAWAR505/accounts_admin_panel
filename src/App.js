@@ -8,6 +8,7 @@ import { auth } from "./firebase";
 import { signinSuccess, logoutInitiate } from "./redux/Action";
 
 import Loader from "./components/Constants/Loader";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,12 @@ const App = () => {
         return <Loader/>
       }
     
-  return element; 
+      return (
+     <>
+       { element}
+      <ToastContainer/>
+     </>
+        
+        ); 
 };
 export default App;

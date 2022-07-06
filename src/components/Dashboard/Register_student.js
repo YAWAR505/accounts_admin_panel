@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Card,
+  CardActions,
   CardContent,
   CardHeader,
   Grid,
@@ -9,7 +9,6 @@ import {
   ListItemText,
   makeStyles,
   MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -17,24 +16,19 @@ import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import { db } from "../../firebase";
-import { useDispatch } from "react-redux";
 import {
   addDoc,
   collection,
   doc,
-  getDoc,
   getDocs,
   onSnapshot,
-  orderBy,
   query,
-  serverTimestamp,
   Timestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { paths } from "../Routes/paths";
-import moment from "moment";
 const usestyles = makeStyles(() => ({
   Signup_Box: {
     width: "100%",
@@ -51,6 +45,9 @@ const usestyles = makeStyles(() => ({
   },
   manuitems: {
     display: "flex",
+  },
+  actions: {
+    justifyContent: "center",
   },
 }));
 
@@ -117,7 +114,6 @@ const Create_Signup = () => {
   function addLeadingZeros(num, totalLength) {
     return String(num).padStart(totalLength, "0");
   }
-  console.log(students);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues,
@@ -254,21 +250,18 @@ const Create_Signup = () => {
               </CardContent>
             ))}
 
-            <Box
-              sx={{
-                marginTop: "50px",
-              }}
+            <CardActions  className={classes.actions}
+            
             >
               <Button
                 type="submit"
-                fullWidth
                 variant="contained"
                 color="primary"
                 size="large"
               >
                 {state ? "update" : "Register"}
               </Button>
-            </Box>
+            </CardActions>
           </Box>
         </form>
       </Box>

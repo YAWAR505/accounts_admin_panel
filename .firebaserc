@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "default": "admin-panel-a3f1f"
+  },
+  "hosting": {
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+   
+  }
+
+}
+

@@ -4,7 +4,7 @@ import Register from "../../Pages/Register";
 import AddCourses from "../../Pages/AddCourses";
 import Charts from "../Dashboard/Charts";
 import PayFee from "../Dashboard/PayFee";
-import Users from "../Dashboard/Users";
+import RegisterUsers from "../Dashboard/RegisterUsers";
 import UsersList from "../Dashboard/UsersList";
 import Transactions from "../Dashboard/Transactions";
 import Create_Drawer from "../Create_Drawer";
@@ -30,7 +30,8 @@ export const UseRoute = () => [
       { path: paths.getRegisterStudents(), element: <Register /> },
       { path: paths.getRegisterStudentsEdit(":id"), element: <Register /> },
       { path: paths.getPayFee(), element: <PayFee /> },
-      { path: paths.getUsers(), element: <Users /> },
+      { path: paths.getRegisterUsers(), element: <RegisterUsers /> },
+      { path: paths.getUsersEdit(":id"), element: <RegisterUsers />},
       { path: paths.getUsersList(), element: <UsersList /> },
       { path: paths.getTransactions(), element: <Transactions /> },
     ],

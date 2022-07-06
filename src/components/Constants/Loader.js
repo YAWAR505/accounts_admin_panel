@@ -12,7 +12,6 @@ const useStyles = makeStyles(()=>({
     },
     container_loading:{
       width: '50%',
-    
      margin: '0  auto'
   
     }
@@ -23,7 +22,7 @@ const Loader = () => {
   return (
     <Box container className={classes.loading}> 
         <div ClassNames={classes.container_loading}>
-         <CircularProgress color="secondary" />
+         <CircularProgress color="secondary" size={90}/>
         </div>
         </Box>
   )
