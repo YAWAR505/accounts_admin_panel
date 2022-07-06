@@ -1,5 +1,5 @@
 import { Box, Grid, makeStyles } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import UserLogin from "./Loginpage/UserLogin";
 const usestyles = makeStyles(() => ({
   loginpage:{
@@ -12,8 +12,9 @@ const Login = () => {
 
   return (
     <>
-      <Grid className={classes.loginpage}>
-       
+      <Grid  container spacing={2} className={classes.loginpage}>
+      <Grid item xs={12}>
+      </Grid>
       <UserLogin/>
       </Grid>
     </>
