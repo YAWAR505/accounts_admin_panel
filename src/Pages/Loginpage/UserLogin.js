@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
-import { signinInitiate,signinFail } from "../../redux/Action";
+import { signinInitiate, signinFail } from "../../redux/Action";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 // import Loader from "../components/Constants/Loader";
@@ -31,14 +31,18 @@ const usestyles = makeStyles(() => ({
     justifyContent: "center",
   },
   button: {
+    marginTop: "20px",
     backgroundColor: "green",
     color: "#fff",
+  },
+  logo: {
+    backgroundColor: "#000",
   },
 }));
 const UserLogin = () => {
   const classes = usestyles();
   const [showPassword, setShowPassword] = useState(false);
-  const {loading} = useSelector((state) => state.reducer);
+  const { loading } = useSelector((state) => state.reducer);
   console.log(loading);
   const dispatch = useDispatch();
   const toggleShowPassword = () => {
@@ -66,16 +70,18 @@ const UserLogin = () => {
       dispatch(signinInitiate(values.email, values.password));
     },
   });
-  
-//   if(loading){
-//     return <Loader/>
-//   }
+
+  //   if(loading){
+  //     return <Loader/>
+  //   }
   return (
     <>
       <Box className={classes.login}>
         <Box className={classes.login__container}>
           <form onSubmit={formik.handleSubmit}>
-            <Typography variant="h5">Login </Typography>
+            <Typography variant="h5" className={classes.logo}>
+              Login{" "}
+            </Typography>
             <TextField
               id="email"
               name="email"
