@@ -22,21 +22,35 @@ const usestyles = makeStyles(() => ({
     width: "100%",
     display: "flex",
     alignItems: "center",
-    alignContent: "flex-end",
     height: "650px",
+    opacity:"0.5",
+    "&:hover":{
+    opacity:"0.9",
+
+    }
   },
   login__container: {
+    backgroundColor: "#fff",
     width: "100%",
     display: "flex",
+    padding: "20px",
+    flexDirection: "column",
+    height: "545px",
     justifyContent: "center",
+    borderRadius: "5px",
   },
   button: {
     marginTop: "20px",
     backgroundColor: "green",
     color: "#fff",
+    "&:hover":{
+    backgroundColor: "green",
+    }
   },
   logo: {
-    backgroundColor: "#000",
+    textAlign:'center',
+    fontWeight:"bold"
+    
   },
 }));
 const UserLogin = () => {
@@ -79,7 +93,7 @@ const UserLogin = () => {
       <Box className={classes.login}>
         <Box className={classes.login__container}>
           <form onSubmit={formik.handleSubmit}>
-            <Typography variant="h5" className={classes.logo}>
+            <Typography variant="h4" className={classes.logo}>
               Login{" "}
             </Typography>
             <TextField
