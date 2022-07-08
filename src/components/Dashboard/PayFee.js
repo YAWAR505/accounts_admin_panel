@@ -28,7 +28,6 @@ import { MONTHS } from "../Constants/months";
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: 0,
-
     width: "100%",
   },
   actions: {
@@ -70,7 +69,6 @@ const PayFee = () => {
   const [transactions, setTransactions] = useState([]);
   const [saveData, setsaveData] = useState([]);
 
- 
   useEffect(() => {
     const q = query(collection(db, "Users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -328,9 +326,8 @@ const PayFee = () => {
                   {FEE_TYPES.map((fee) => (
                     <MenuItem
                       value={fee.value}
-                      disabled={transactions.some( (item) =>{
-                        return ( 
-                   item.feeType === fee.value);
+                      disabled={transactions.some((item) => {
+                        return item.feeType === fee.value;
                       })}
                     >
                       {fee.label}
@@ -355,7 +352,14 @@ const PayFee = () => {
                     // helperText={formik.touched.firstName && formik.errors.firstName}
                   >
                     {MONTHS.map((month) => (
-                      <MenuItem value={month.value} disabled={saveData.some((item) => item.Month === month.label)}>{month.label}</MenuItem>
+                      <MenuItem
+                        value={month.value}
+                        disabled={saveData.some(
+                          (item) => item.Month === month.label
+                        )}
+                      >
+                        {month.label}
+                      </MenuItem>
                     ))}
                   </TextField>
                 </Grid>

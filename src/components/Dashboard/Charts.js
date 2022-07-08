@@ -13,7 +13,7 @@ const Charts = () => {
   return (
        <div className={classes.charts}>
           <Featured />
-          <TotalRevenue title="Last 6 Months (Revenue)" aspect={2 / 1} />
+          <TotalRevenue title="Transactions" aspect={2 / 1} />
         </div>
   )
 }

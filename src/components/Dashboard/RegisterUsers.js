@@ -3,20 +3,17 @@ import clsx from "clsx";
 // import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import * as Yup from "yup";
-import { Formik, getIn, useFormik } from "formik";
+import { Formik, getIn } from "formik";
 import {
-  Card,
   CardHeader,
   CardContent,
   CardActions,
-  Divider,
   Grid,
   TextField,
   Button,
   MenuItem,
   InputAdornment,
   IconButton,
-  Paper,
   Box,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
@@ -24,10 +21,9 @@ import { hanldSignup } from "../../redux/Action";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
-import { usePlacesWidget } from "react-google-autocomplete";
-import { MuiTelInput } from "mui-tel-input";
-import axios from "axios";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { paths } from "../Routes/paths";
+import { toast } from "react-toastify";
 const ROLL_TYPE = [
   {
     label: "Student",
@@ -68,7 +64,8 @@ const Users = () => {
   const param = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
-console.log(state,"state");
+  const navigate = useNavigate();
+
   // useEffect(() => {
   //   setInitialValues({
   //     firstName: state?.fatherName,
@@ -92,8 +89,6 @@ console.log(state,"state");
   const toggleConfirmShowPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
-  
- 
 
   return (
     <Box className={clsx(classes.root)}>
@@ -128,10 +123,12 @@ console.log(state,"state");
         onSubmit={(values, { resetForm }) => {
           try {
             dispatch(hanldSignup(values.email, values.password, values));
-            resetForm({ values: "" });
+            toast.success("User Register Successful");
           } catch (e) {
             Error(e);
           }
+          navigate(paths.getUsersList());
+          resetForm({ values: "" });
         }}
       >
         {({
@@ -152,7 +149,6 @@ console.log(state,"state");
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.firstName && errors.firstName)}
-                     
                     fullWidth
                     required
                     helperText={touched.firstName && errors.firstName}
@@ -168,7 +164,6 @@ console.log(state,"state");
                 <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.lastName && errors.lastName)}
-                   
                     fullWidth
                     required
                     helperText={touched.lastName && errors.lastName}
@@ -183,11 +178,9 @@ console.log(state,"state");
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
-                 
                     fullWidth
                     required
                     error={Boolean(touched.role && errors.role)}
-
                     helperText={touched.role && errors.role}
                     label="Role"
                     name="role"
@@ -207,7 +200,6 @@ console.log(state,"state");
                   <TextField
                     error={Boolean(touched.email && errors.email)}
                     helperText={touched.email && errors.email}
-                 
                     fullWidth
                     required
                     label="Email"
@@ -221,7 +213,6 @@ console.log(state,"state");
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
-                       
                     fullWidth
                     required
                     error={Boolean(touched.password && errors.password)}
@@ -253,7 +244,6 @@ console.log(state,"state");
                     error={Boolean(
                       touched.confirmPassword && errors.confirmPassword
                     )}
-                 
                     fullWidth
                     required
                     helperText={
@@ -315,7 +305,7 @@ console.log(state,"state");
                   <TextField
                     error={Boolean(
                       getIn(touched, "userDetails.motherName") &&
-                      getIn(errors, "userDetails.motherName")
+                        getIn(errors, "userDetails.motherName")
                     )}
                     fullWidth
                     required
@@ -333,7 +323,6 @@ console.log(state,"state");
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-              
                   <PhoneInput
                     country="in"
                     enableSearch={true}
@@ -397,10 +386,10 @@ console.log(state,"state");
               </Button>
             </CardActions>
           </form>
-         )} 
+        )}
       </Formik>
     </Box>
-  )
+  );
 };
 
 export default Users;

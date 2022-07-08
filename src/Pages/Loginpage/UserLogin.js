@@ -23,10 +23,9 @@ const usestyles = makeStyles(() => ({
     display: "flex",
     alignItems: "center",
     height: "650px",
-    opacity:"0.5",
-    "&:hover":{
-    opacity:"0.9",
-
+    opacity: "0.5",
+    "&:hover": {
+      opacity: "0.9",
     }
   },
   login__container: {
@@ -43,21 +42,20 @@ const usestyles = makeStyles(() => ({
     marginTop: "20px",
     backgroundColor: "green",
     color: "#fff",
-    "&:hover":{
-    backgroundColor: "green",
+    "&:hover": {
+      backgroundColor: "green",
     }
   },
   logo: {
-    textAlign:'center',
-    fontWeight:"bold"
-    
+    textAlign: 'center',
+    fontWeight: "bold"
+
   },
 }));
 const UserLogin = () => {
   const classes = usestyles();
   const [showPassword, setShowPassword] = useState(false);
-  const { loading } = useSelector((state) => state.reducer);
-  console.log(loading);
+  const { loading, error, currentAdmin } = useSelector((state) => state.reducer);
   const dispatch = useDispatch();
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -82,12 +80,23 @@ const UserLogin = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       dispatch(signinInitiate(values.email, values.password));
+      if (currentAdmin !== null) {
+        return toast.success("login")
+      }
     },
   });
 
   //   if(loading){
   //     return <Loader/>
   //   }
+
+  useEffect(() => {
+    toast.error(error);
+  }, [error]);
+
+  // useEffect(() => {
+  //   toast.success(currentAdmin)
+  // }, [currentAdmin]);
   return (
     <>
       <Box className={classes.login}>
@@ -151,3 +160,15 @@ const UserLogin = () => {
 };
 
 export default UserLogin;
+
+var array = [
+  { name: "Peter", age: 43 },
+  { name: "John", age: 32 },
+  { name: "Jake", age: 21 },
+  { name: "Peter", age: 34 },
+  { name: "Peter", age: 24 },
+  { name: "John", age: 22 },
+
+];
+const val = array.filter((item, index) => array.indexOf(item.name) === index)
+console.log(val);

@@ -1,50 +1,67 @@
 import "./chart.scss";
 import {
-  AreaChart,
-  Area,
+  ComposedChart,
+  BarChart,
+  Bar,
+  YAxis,
   XAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+  Legend,
+  Scatter,
+  Line,
+  Area,
 
+} from "recharts";
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "../../../firebase";
+import moment from "moment";
 const data = [
-  { name: "January", Total: 1200 },
-  { name: "February", Total: 2100 },
-  { name: "March", Total: 800 },
-  { name: "April", Total: 1600 },
-  { name: "May", Total: 900 },
-  { name: "June", Total: 1700 },
+  { name: "January", Total: 1200,value: 100 },
+  { name: "February", Total: 2100 ,value:200 },
+  { name: "March", Total: 800 ,value:50 },
+  { name: "April", Total: 1600 ,value: 60},
+  { name: "May", Total: 900 ,value: 400},
+  { name: "June", Total: 1700 ,value: 800},
 ];
 
 const Charts = ({ aspect, title }) => {
+  const [transactions,setTransactions] =useState([])
+  useEffect(() => {
+    const q = query(collection(db, "PayFee"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const Transactions = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTransactions(Transactions);
+    });
+    return () => unsubscribe();
+  }, []);
+ 
   return (
     <div className="chart">
       <div className="title">{title}</div>
+      {!transactions && <div>Loading...</div>}
       <ResponsiveContainer width="100%" aspect={aspect}>
-        <AreaChart
+        <ComposedChart
           width={730}
           height={250}
-          data={data}
+          data={transactions}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
-          <defs>
-            <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis dataKey="name" stroke="gray" />
-          <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
+           {/* <CartesianGrid stroke="#ccc" /> */}
+          <Bar  dataKey="Amount" fill="green" barSize={40} />
+          <XAxis dataKey="feeType"/>
+          <YAxis   />
+          <Line type="monotone" dataKey="Amount" stroke="#ff7300" />
+
           <Tooltip />
-          <Area
-            type="monotone"
-            dataKey="Total"
-            stroke="#8884d8"
-            fillOpacity={1}
-            fill="url(#total)"
-          />
-        </AreaChart>
+          <Legend />
+      
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

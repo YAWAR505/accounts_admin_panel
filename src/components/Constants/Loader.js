@@ -5,10 +5,12 @@ const useStyles = makeStyles(()=>({
     loading:{
       width: '100%',
   display: 'flex',
-  height: '100vh',
+  height: '980px',
   flexDirection:'column',
   justifyContent:"center",
   alignItems: 'center',
+  backgroundColor:"#000",
+  opacity:"0.2"
     },
     container_loading:{
       width: '50%',
@@ -22,7 +24,7 @@ const Loader = () => {
   return (
     <Box container className={classes.loading}> 
         <div ClassNames={classes.container_loading}>
-         <CircularProgress color="secondary" size={90}/>
+         <CircularProgress style={{color:"pink"}} size={80} value={95}/>
         </div>
         </Box>
   )

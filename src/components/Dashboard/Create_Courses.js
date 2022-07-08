@@ -34,7 +34,6 @@ import { paths } from "../Routes/paths";
 import { toast, ToastContainer } from "react-toastify";
 import swal from "sweetalert";
 import Loader from "../Constants/Loader";
-import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -61,12 +60,12 @@ const useStyles = makeStyles(() => ({
   },
   search: {
     marginTop: "10px",
+    marginBottom: "15px",
   },
-  vertItem:{
+  vertItem: {
     display: "flex",
     flexDirection: "column",
-   
-  }
+  },
 }));
 const Create_Courses = () => {
   function numberWithCommas(x) {
@@ -78,7 +77,7 @@ const Create_Courses = () => {
   const [FilteredData, setFilteredData] = useState([]);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [pending, setPending] = useState(true)
+  const [pending, setPending] = useState(true);
   const [q, setQ] = useState("");
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -124,7 +123,7 @@ const Create_Courses = () => {
   };
 
   useEffect(() => {
-    const q = query(collection(db, "addCourse"),orderBy("timestamp", "desc"));
+    const q = query(collection(db, "addCourse"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const getCourse = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -184,18 +183,18 @@ const Create_Courses = () => {
             keepMounted
             onClose={handleClose}
             open={isOpen}
-            style={{     width: '10ch',}}
+            style={{ width: "10ch" }}
             elevation={2}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'bottom', vertical: 'top' }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "bottom", vertical: "top" }}
           >
             {/* <MenuItem className={classes.vertItem} onClick={handleClose}> */}
-              <IconButton onClick={() => actionEdit(row?.id)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton onClick={() => actionDelete(row?.id)}>
-                <DeleteIcon />
-              </IconButton>
+            <IconButton onClick={() => actionEdit(row?.id)}>
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => actionDelete(row?.id)}>
+              <DeleteIcon />
+            </IconButton>
             {/* </MenuItem> */}
           </Menu>
         </>
@@ -213,54 +212,51 @@ const Create_Courses = () => {
       item.Class_Code.toLowerCase().includes(q)
     );
     const timeout = setTimeout(() => {
-    setFilteredData(value);
-    setPending(false);
-  }, 1000);
-  return () => clearTimeout(timeout);
+      setFilteredData(value);
+      setPending(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
   }, [q, data]);
-
 
   return (
     <Box>
-     
-        <div className={classes.csvFileParent}>
-          <Box display="flex" alignItems="center" className={classes.typo}>
-            <Typography variant="h5"> Courses </Typography>
-            <IconButton onClick={addHandler} color="primary">
-              <AddCircleOutlineIcon />
-            </IconButton>
-          </Box>
+      <div className={classes.csvFileParent}>
+        <Box display="flex" alignItems="center" className={classes.typo}>
+          <Typography variant="h5"> Courses </Typography>
+          <IconButton onClick={addHandler} color="primary">
+            <AddCircleOutlineIcon />
+          </IconButton>
+        </Box>
 
-          <CSVLink
-            data={data}
-            filename="students.csv"
-            target="_blank"
-            className={classes.csvFile}
-          >
-            Export CSV
-          </CSVLink>
-        </div>
-        <Box className={classes.search}>
-              {/* <RangePicker onDateChanges={onDateChanges} /> */}
-              <TextField
-                label="Search"
-                variant="outlined"
-                value={q}
-                onChange={handleSearch}
-              />
-            </Box>
-        <Paper elevation={3}>
+        <CSVLink
+          data={data}
+          filename="students.csv"
+          target="_blank"
+          className={classes.csvFile}
+        >
+          Export CSV
+        </CSVLink>
+      </div>
+      <Box className={classes.search}>
+        {/* <RangePicker onDateChanges={onDateChanges} /> */}
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={q}
+          onChange={handleSearch}
+        />
+      </Box>
+      <Paper elevation={3}>
         <DataTable
           columns={columns}
           data={FilteredData}
           striped
           progressPending={pending}
-          progressComponent={ <CircularProgress/> }
+          progressComponent={<Loader />}
           highlightOnHover
           pagination
         />
-        </Paper>
-    
+      </Paper>
     </Box>
   );
 };

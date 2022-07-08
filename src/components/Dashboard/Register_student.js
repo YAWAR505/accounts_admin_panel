@@ -33,9 +33,7 @@ const usestyles = makeStyles(() => ({
   Signup_Box: {
     width: "100%",
   },
-  signup_typo: {
-    color: "#029904",
-  },
+
   formbox: {
     width: "100%",
   },
@@ -48,6 +46,10 @@ const usestyles = makeStyles(() => ({
   },
   actions: {
     justifyContent: "center",
+  },
+  listItemstext: {
+    display: "flex",
+    justifyContent: "space-between",
   },
 }));
 
@@ -181,7 +183,11 @@ const Create_Signup = () => {
               {users.map((course) => (
                 <MenuItem
                   value={course.firstName}
-                  disabled={state ? false :students.some((item) => item.name === course.firstName)}
+                  disabled={
+                    state
+                      ? false
+                      : students.some((item) => item.name === course.firstName)
+                  }
                 >
                   {course.firstName}
                 </MenuItem>
@@ -211,48 +217,38 @@ const Create_Signup = () => {
                 <CardHeader title="Student Details" />
                 <Grid container spacing={2}>
                   <Grid item md={6} xs={12}>
-                    <ListItem>
-                      <ListItemText> First Name:- </ListItemText>
-                      <ListItemText> {item.firstName} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">First Name:-</Typography>
+                      <Typography>{item.firstName}</Typography>
                     </ListItem>
-                    <ListItem>
-                      <ListItemText> Email:- </ListItemText>
-                      <ListItemText> {item.email} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6"> Email:- </Typography>
+                      <Typography> {item.email} </Typography>
                     </ListItem>
-                    <ListItem>
-                      <ListItemText>Role:- </ListItemText>
-                      <ListItemText>{item.role} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">Role:- </Typography>
+                      <Typography>{item.role} </Typography>
                     </ListItem>
-                    <ListItem>
-                      <ListItemText>Address:- </ListItemText>
-                      <ListItemText>{item.userDetails.Address} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">Address:- </Typography>
+                      <Typography>{item.userDetails.Address} </Typography>
                     </ListItem>
                   </Grid>
                   <Grid item md={6} xs={12}>
-                  <ListItem>
-                      <ListItemText> Last Name:- </ListItemText>
-                      <ListItemText> {item.lastName} </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">Phone Number:- </Typography>
+                      <Typography>{item.userDetails.PhoneNumber} </Typography>
                     </ListItem>
-                    <ListItem>
-                      <ListItemText>Phone Number:- </ListItemText>
-                      <ListItemText>
-                        {item.userDetails.PhoneNumber}
-                      </ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText>Father Name:- </ListItemText>
-                      <ListItemText>
-                        {item.userDetails.fatherName}{" "}
-                      </ListItemText>
+                    <ListItem className={classes.listItemstext}>
+                      <Typography variant="h6">Father Name:- </Typography>
+                      <Typography>{item.userDetails.fatherName} </Typography>
                     </ListItem>
                   </Grid>
                 </Grid>
               </CardContent>
             ))}
 
-            <CardActions  className={classes.actions}
-            
-            >
+            <CardActions className={classes.actions}>
               <Button
                 type="submit"
                 variant="contained"

@@ -30,6 +30,7 @@ import "react-data-table-component-extensions/dist/index.css";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import swal from "sweetalert";
+import Loader from "../Constants/Loader";
 const useStyles = makeStyles(() => ({
   typo: {
     marginLeft: "10px",
@@ -38,7 +39,7 @@ const useStyles = makeStyles(() => ({
     marginTop: "10px",
     display: "flex",
     width: "100%",
-    marginBottom:"10px",
+    marginBottom: "10px",
     justifyContent: "space-between",
   },
   vertItem: {},
@@ -166,16 +167,13 @@ const Create_Student = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            {/* <MenuItem className={classes.vertItem} disableRipple> */}
             <IconButton onClick={() => actionEdit(row?.id)}>
               <EditIcon />
             </IconButton>
-            {/* </MenuItem> */}
-            {/* <MenuItem className={classes.vertItem} > */}
+
             <IconButton onClick={() => actionDelete(row?.id)}>
               <DeleteIcon />
             </IconButton>
-            {/* </MenuItem> */}
           </Menu>
         </>
       ),
@@ -206,52 +204,51 @@ const Create_Student = () => {
   }, [search, user]);
   return (
     <Box>
-        <Box display="flex" alignItems="center" className={classes.typo}>
-          <Typography variant="h5"> Students </Typography>
-          <IconButton onClick={addHandler} color="primary">
-            <AddCircleOutlineIcon />
-          </IconButton>
-        </Box>
-        <Grid container spacing={2} className={classes.search}>
-          <Grid item md={6} xs={12}>
-            <TextField
-              label="Search By Name"
-              variant="outlined"
-              value={q}
-              fullWidth
-              onChange={handleSearch}
-            />
-          </Grid>
-
-          <Grid item md={6} xs={12}>
-            <TextField
-              label="Search by Class"
-              variant="outlined"
-              value={search}
-              fullWidth
-              select
-              onChange={handleSearchByclass}
-            >
-              {course.map((course) => (
-                <MenuItem value={course.class}>{course.class}</MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+      <Box display="flex" alignItems="center" className={classes.typo}>
+        <Typography variant="h5"> Students </Typography>
+        <IconButton onClick={addHandler} color="primary">
+          <AddCircleOutlineIcon />
+        </IconButton>
+      </Box>
+      <Grid container spacing={2} className={classes.search}>
+        <Grid item md={6} xs={12}>
+          <TextField
+            label="Search By Name"
+            variant="outlined"
+            value={q}
+            fullWidth
+            onChange={handleSearch}
+          />
         </Grid>
-      
 
-      <Paper elevation={3} >
+        <Grid item md={6} xs={12}>
+          <TextField
+            label="Search by Class"
+            variant="outlined"
+            value={search}
+            fullWidth
+            select
+            onChange={handleSearchByclass}
+          >
+            {course.map((course) => (
+              <MenuItem value={course.class}>{course.class}</MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+      </Grid>
+
+      <Paper elevation={3}>
         <DataTable
           columns={columns}
           data={FilteredData}
           defaultSortAsc={false}
           progressPending={pending}
-          progressComponent={<CircularProgress />}
+          progressComponent={<Loader />}
           striped
           highlightOnHover
           pagination
         />
-        </Paper>
+      </Paper>
     </Box>
   );
 };

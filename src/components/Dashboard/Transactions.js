@@ -26,6 +26,7 @@ import myimage from "../../images/myimage.jpg";
 import { DateRangePicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import Widget from "./Widget";
+import Loader from "../Constants/Loader";
 const useStyles = makeStyles(() => ({
   root: {
     padding: 0,
@@ -68,7 +69,7 @@ const Transactions = () => {
   const classes = useStyles();
   const [transactions, setTransactions] = useState([]);
   const [FilteredData, setFilteredData] = useState([]);
-  const [pending, setPending] = useState(true)
+  const [pending, setPending] = useState(true);
 
   const [q, setQ] = useState("");
   console.log(FilteredData);
@@ -128,8 +129,8 @@ const Transactions = () => {
       selector: (row) => (
         <Badge
           style={{
-            padding: '8px 15px',
-            borderRadius: '5px',
+            padding: "8px 15px",
+            borderRadius: "5px",
             backgroundColor:
               row.feeType === "monthly_fee" || row.feeType === "admission"
                 ? "#029904"
@@ -176,11 +177,10 @@ const Transactions = () => {
       item.studentName.toLowerCase().includes(q)
     );
     const timeout = setTimeout(() => {
-    
-    setFilteredData(value);
-    setPending(false);
-  }, 1000);
-  return () => clearTimeout(timeout);
+      setFilteredData(value);
+      setPending(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
   }, [q, transactions]);
 
   const hanldeDateChange = (startDate) => {
@@ -201,14 +201,13 @@ const Transactions = () => {
     });
     setFilteredData(dateValues);
   };
-
-  const styles = { width: 500 };
+  const styles = { width: 900 };
   return (
     <Box mt={2}>
-      <Box mb={2} >
+      <Box mb={2}>
         <Grid container spacing={2}>
           <Grid xs={12} md={3}>
-            <Widget type="todaysPayment" />
+                          <Widget type="todaysPayment" />
           </Grid>
           <Grid xs={12} md={3}>
             <Widget type="sevendaysPayment" />
@@ -234,7 +233,7 @@ const Transactions = () => {
           Export CSV
         </CSVLink>
       </div>
- 
+
       <Grid container spacing={2} className={classes.search}>
         <Grid item md={6} xs={12}>
           <DateRangePicker
@@ -264,7 +263,7 @@ const Transactions = () => {
           highlightOnHover
           defaultSortAsc={false}
           progressPending={pending}
-          progressComponent={ <CircularProgress/> }
+          progressComponent={<Loader />}
           pagination
         />
       </Paper>

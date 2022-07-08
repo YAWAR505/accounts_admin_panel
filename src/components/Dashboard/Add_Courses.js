@@ -78,11 +78,11 @@ const Add_Courses = () => {
     onSubmit: async (values, { resetForm }) => {
       const year = new Date().getFullYear();
       try {
-        toast.dark(
+        toast.success(
           state ? "Class Updated Successful" : " Class Added Successful"
         );
 
-        state 
+        state
           ? await updateDoc(doc(db, "addCourse", param.id), {
               class: values.class,
               AdmissionFee: values.AdmissionFee,

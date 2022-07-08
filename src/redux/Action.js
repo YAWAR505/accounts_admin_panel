@@ -18,17 +18,19 @@ export const signinFail = (error) => ({
   payload: error,
 });
 
-export const signinInitiate = (email, password) =>  async(dispatch) => {
+export const signinInitiate = (email, password) => async (dispatch) => {
   try {
-    const user =  await signInWithEmailAndPassword(auth, email, password);
+    const user = await signInWithEmailAndPassword(auth, email, password);
     dispatch(signinSuccess(user.user));
   } catch (error) {
+
+    // if(error.message  === 'auth/email-not-found')
     dispatch(signinFail(error.message));
   }
 };
 
-export const logoutInitiate = (admin) =>  (dispatch) => {
-   signOut(auth);
+export const logoutInitiate = (admin) => (dispatch) => {
+  signOut(auth);
   dispatch({
     type: types.LOGOUT_END,
     payload: admin,
