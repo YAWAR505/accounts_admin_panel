@@ -16,17 +16,13 @@ import { toast } from "react-toastify";
 import { signinInitiate, signinFail } from "../../redux/Action";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-// import Loader from "../components/Constants/Loader";
+import Loader from "../../components/Constants/Loader";
 const usestyles = makeStyles(() => ({
   login: {
     width: "100%",
     display: "flex",
     alignItems: "center",
-    height: "650px",
-    opacity: "0.5",
-    "&:hover": {
-      opacity: "0.9",
-    }
+    height: "100vh",
   },
   login__container: {
     backgroundColor: "#fff",
@@ -34,7 +30,7 @@ const usestyles = makeStyles(() => ({
     display: "flex",
     padding: "20px",
     flexDirection: "column",
-    height: "545px",
+    height: "100%",
     justifyContent: "center",
     borderRadius: "5px",
   },
@@ -80,30 +76,21 @@ const UserLogin = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       dispatch(signinInitiate(values.email, values.password));
-      if (currentAdmin !== null) {
-        return toast.success("login")
-      }
     },
   });
 
-  //   if(loading){
-  //     return <Loader/>
-  //   }
 
   useEffect(() => {
     toast.error(error);
   }, [error]);
 
-  // useEffect(() => {
-  //   toast.success(currentAdmin)
-  // }, [currentAdmin]);
   return (
     <>
       <Box className={classes.login}>
         <Box className={classes.login__container}>
           <form onSubmit={formik.handleSubmit}>
             <Typography variant="h4" className={classes.logo}>
-              Login{" "}
+              Login
             </Typography>
             <TextField
               id="email"
@@ -160,15 +147,3 @@ const UserLogin = () => {
 };
 
 export default UserLogin;
-
-var array = [
-  { name: "Peter", age: 43 },
-  { name: "John", age: 32 },
-  { name: "Jake", age: 21 },
-  { name: "Peter", age: 34 },
-  { name: "Peter", age: 24 },
-  { name: "John", age: 22 },
-
-];
-const val = array.filter((item, index) => array.indexOf(item.name) === index)
-console.log(val);

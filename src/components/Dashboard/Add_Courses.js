@@ -76,7 +76,6 @@ const Add_Courses = () => {
     enableReinitialize: true,
     initialValues,
     onSubmit: async (values, { resetForm }) => {
-      const year = new Date().getFullYear();
       try {
         toast.success(
           state ? "Class Updated Successful" : " Class Added Successful"
@@ -84,16 +83,16 @@ const Add_Courses = () => {
 
         state
           ? await updateDoc(doc(db, "addCourse", param.id), {
-              class: values.class,
-              AdmissionFee: values.AdmissionFee,
-              monthelyFee: values.monthelyFee,
-              Class_Code: values.Class_Code,
-            })
+            class: values.class,
+            AdmissionFee: values.AdmissionFee,
+            monthelyFee: values.monthelyFee,
+            Class_Code: values.Class_Code,
+          })
           : await addDoc(collection(db, "addCourse"), {
-              ...values,
-              s_id: Course.length,
-              timestamp: Timestamp.now(),
-            });
+            ...values,
+            s_id: Course.length,
+            timestamp: Timestamp.now(),
+          });
       } catch (e) {
         Error(e);
       }
@@ -119,8 +118,8 @@ const Add_Courses = () => {
           variant="outlined"
           onChange={formik.handleChange}
           value={formik.values.class}
-          // error={formik.touched.coursename && Boolean(formik.errors.coursename)}
-          // helperText={formik.touched.coursename && formik.errors.coursename}
+        // error={formik.touched.coursename && Boolean(formik.errors.coursename)}
+        // helperText={formik.touched.coursename && formik.errors.coursename}
         >
           {CLASS_DATA.map((code) => (
             <MenuItem value={code.label}>{code.label}</MenuItem>
@@ -136,8 +135,8 @@ const Add_Courses = () => {
           variant="outlined"
           onChange={formik.handleChange}
           value={formik.values.AdmissionFee}
-          // error={formik.touched.totalFee && Boolean(formik.errors.totalFee)}
-          // helperText={formik.touched.totalFee && formik.errors.totalFee}
+        // error={formik.touched.totalFee && Boolean(formik.errors.totalFee)}
+        // helperText={formik.touched.totalFee && formik.errors.totalFee}
         />
         <TextField
           id="monthelyFee"
@@ -149,10 +148,10 @@ const Add_Courses = () => {
           variant="outlined"
           onChange={formik.handleChange}
           value={formik.values.monthelyFee}
-          // error={
-          //   formik.touched.semesterFee && Boolean(formik.errors.semesterFee)
-          // }
-          // helperText={formik.touched.semesterFee && formik.errors.semesterFee}
+        // error={
+        //   formik.touched.semesterFee && Boolean(formik.errors.semesterFee)
+        // }
+        // helperText={formik.touched.semesterFee && formik.errors.semesterFee}
         />
         <TextField
           id="Class_Code"
@@ -165,10 +164,10 @@ const Add_Courses = () => {
           variant="outlined"
           onChange={formik.handleChange}
           value={formik.values.Class_Code}
-          // error={
-          //   formik.touched.semesterFee && Boolean(formik.errors.semesterFee)
-          // }
-          // helperText={formik.touched.semesterFee && formik.errors.semesterFee}
+        // error={
+        //   formik.touched.semesterFee && Boolean(formik.errors.semesterFee)
+        // }
+        // helperText={formik.touched.semesterFee && formik.errors.semesterFee}
         >
           {CLASS_DATA.map((code) => (
             <MenuItem value={code.Code}>{code.Code}</MenuItem>

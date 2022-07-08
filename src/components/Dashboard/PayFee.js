@@ -188,8 +188,8 @@ const PayFee = () => {
                 fullWidth
                 onChange={formik.handleChange}
                 value={formik.values.class}
-                // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                // helperText={formik.touched.firstName && formik.errors.firstName}
+              // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+              // helperText={formik.touched.firstName && formik.errors.firstName}
               >
                 {course.map((course) => (
                   <MenuItem value={course.class}>{course.class}</MenuItem>
@@ -209,8 +209,8 @@ const PayFee = () => {
                 fullWidth
                 onChange={formik.handleChange}
                 value={formik.values.studentName}
-                // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                // helperText={formik.touched.firstName && formik.errors.firstName}
+              // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+              // helperText={formik.touched.firstName && formik.errors.firstName}
               >
                 {filterData.map((course) => (
                   <MenuItem value={course.name}>{course.name}</MenuItem>
@@ -320,8 +320,8 @@ const PayFee = () => {
                     });
                   }}
                   value={formik.values.feeType}
-                  // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                  // helperText={formik.touched.firstName && formik.errors.firstName}
+                // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                // helperText={formik.touched.firstName && formik.errors.firstName}
                 >
                   {FEE_TYPES.map((fee) => (
                     <MenuItem
@@ -348,8 +348,8 @@ const PayFee = () => {
                     fullWidth
                     onChange={formik.handleChange}
                     value={formik.values.Month}
-                    // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                    // helperText={formik.touched.firstName && formik.errors.firstName}
+                  // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                  // helperText={formik.touched.firstName && formik.errors.firstName}
                   >
                     {MONTHS.map((month) => (
                       <MenuItem
@@ -375,8 +375,8 @@ const PayFee = () => {
                   fullWidth
                   onChange={formik.handleChange}
                   value={formik.values.Amount}
-                  // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                  // helperText={formik.touched.firstName && formik.errors.firstName}
+                // error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                // helperText={formik.touched.firstName && formik.errors.firstName}
                 />
               </Grid>
             </Grid>

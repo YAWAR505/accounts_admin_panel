@@ -284,7 +284,7 @@ const Users = () => {
                   <TextField
                     error={Boolean(
                       getIn(touched, "userDetails.fatherName") &&
-                        getIn(errors, "userDetails.fatherName")
+                      getIn(errors, "userDetails.fatherName")
                     )}
                     fullWidth
                     required
@@ -305,7 +305,7 @@ const Users = () => {
                   <TextField
                     error={Boolean(
                       getIn(touched, "userDetails.motherName") &&
-                        getIn(errors, "userDetails.motherName")
+                      getIn(errors, "userDetails.motherName")
                     )}
                     fullWidth
                     required
@@ -356,7 +356,7 @@ const Users = () => {
                   <TextField
                     error={Boolean(
                       getIn(touched, "userDetails.Address") &&
-                        getIn(errors, "userDetails.Address")
+                      getIn(errors, "userDetails.Address")
                     )}
                     fullWidth
                     required

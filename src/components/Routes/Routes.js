@@ -19,7 +19,7 @@ export const UseRoute = () => [
     element: auth.currentUser ? (
       <Create_Drawer />
     ) : (
-      <Navigate to={paths.getLogin()}/>
+      <Navigate to={paths.getLogin()} />
     ),
     children: [
       { path: paths.getDashboard(), element: <Charts /> },
@@ -31,13 +31,13 @@ export const UseRoute = () => [
       { path: paths.getRegisterStudentsEdit(":id"), element: <Register /> },
       { path: paths.getPayFee(), element: <PayFee /> },
       { path: paths.getRegisterUsers(), element: <RegisterUsers /> },
-      { path: paths.getUsersEdit(":id"), element: <RegisterUsers />},
+      { path: paths.getUsersEdit(":id"), element: <RegisterUsers /> },
       { path: paths.getUsersList(), element: <UsersList /> },
       { path: paths.getTransactions(), element: <Transactions /> },
     ],
   },
   {
     path: paths.getLogin(),
-    element: !auth.currentUser  ? <Login /> : <Navigate to={paths.getDashboard()}/>,
+    element: !auth.currentUser ? <Login /> : <Navigate to={paths.getDashboard()} />,
   },
 ];

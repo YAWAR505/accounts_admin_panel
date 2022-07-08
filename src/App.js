@@ -27,17 +27,17 @@ const App = () => {
   }, []);
 
   let element = useRoutes(UseRoute());
-  
-      if(isAuth.loading){
-        return <Loader/>
-      }
-    
-      return (
-     <>
-       { element}
-      <ToastContainer/>
-     </>
-        
-        ); 
+
+  if (isAuth.loading) {
+    return <Loader />
+  }
+
+  return (
+    <>
+      {element}
+      <ToastContainer />
+    </>
+
+  );
 };
 export default App;

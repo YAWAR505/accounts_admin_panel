@@ -6,7 +6,6 @@ import {
   CardHeader,
   Grid,
   ListItem,
-  ListItemText,
   makeStyles,
   MenuItem,
   TextField,
@@ -29,6 +28,7 @@ import {
 } from "firebase/firestore";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { paths } from "../Routes/paths";
+import { toast } from "react-toastify";
 const usestyles = makeStyles(() => ({
   Signup_Box: {
     width: "100%",
@@ -129,22 +129,23 @@ const Create_Signup = () => {
       const querySnap = await getDocs(qroll);
       const year = new Date().getFullYear();
       const short = year.toString().slice(-2);
-      console.log(short);
       try {
+        toast.success(
+          state ? "User Updated Successful" : " User Added Successful"
+        );
         state
           ? await updateDoc(doc(db, "Students", param.id), {
-              name: values.name,
-              ClassName: values.ClassName,
-              rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
-            })
+            name: values.name,
+            ClassName: values.ClassName,
+            rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
+          })
           : await addDoc(collection(db, "Students"), {
-              ...values,
-              rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
-              S_id: `PS${short}${addLeadingZeros(students.length, 2)}`,
-
-              user_id: students.length,
-              timestamp: Timestamp.now(),
-            });
+            ...values,
+            rollNo: parseInt(values.ClassName) * 1000 + querySnap.size + 1,
+            S_id: `PS${short}${addLeadingZeros(students.length, 2)}`,
+            user_id: students.length,
+            timestamp: Timestamp.now(),
+          });
         resetForm({ values: "" });
         navigate(paths.getStudents());
       } catch (e) {
@@ -177,8 +178,8 @@ const Create_Signup = () => {
               className={classes.width}
               onChange={formik.handleChange}
               value={formik.values.name}
-              // error={formik.touched.name && Boolean(formik.errors.name)}
-              // helperText={formik.touched.namefalse && formik.errors.name}
+            // error={formik.touched.name && Boolean(formik.errors.name)}
+            // helperText={formik.touched.namefalse && formik.errors.name}
             >
               {users.map((course) => (
                 <MenuItem
@@ -205,8 +206,8 @@ const Create_Signup = () => {
               className={classes.width}
               onChange={formik.handleChange}
               value={formik.values.ClassName}
-              // error={formik.touched.course && Boolean(formik.errors.course)}
-              // helperText={formik.touched.course && formik.errors.course}
+            // error={formik.touched.course && Boolean(formik.errors.course)}
+            // helperText={formik.touched.course && formik.errors.course}
             >
               {course.map((course) => (
                 <MenuItem value={course.class}>{course.class}</MenuItem>

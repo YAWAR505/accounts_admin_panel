@@ -34,7 +34,7 @@ const usestyles = makeStyles(() => ({
       textDecoration: "none",
       color: "#fff",
     },
-  
+
   },
   icons: {
     color: "#2ebf30",
@@ -44,7 +44,7 @@ const usestyles = makeStyles(() => ({
     color: "#fff",
     textTransform: "none",
     width: 130,
-    margin:'0 auto',
+    margin: '0 auto',
     "&:hover": {
       backgroundColor: "#029904",
     },
@@ -159,23 +159,23 @@ const Create_Drawer = () => {
 
           <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
             <Typography variant="h6" noWrap>
-               Dashboard
+              Dashboard
             </Typography>
             <IconButton size="large">
-            <AccountCircleIcon sx={{ fontSize: 40 }} color="primary" />
-          </IconButton>
+              <AccountCircleIcon sx={{ fontSize: 40 }} color="primary" />
+            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
-         
+
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             display: 'flex',
             flexDirection: 'column',
-            padding:"40px 0",
+            padding: "40px 0",
             justifyContent: 'space-between',
             backgroundColor: "#242426",
             width: drawerWidth,
@@ -186,10 +186,10 @@ const Create_Drawer = () => {
         anchor="left"
         open={open}
       >
-      
+
         <Grid container spacing={2} >
           {Manu.map((manu, index) => (
-            <Grid  item button key={index} xs={12} >
+            <Grid item button key={index} xs={12} >
               <NavLink
                 to={manu.path}
                 className={classes.navlink}
@@ -201,21 +201,21 @@ const Create_Drawer = () => {
                 >
                   {manu.icon}
                 </ListItemIcon>
-                <ListItemText primary={manu.title}/>
+                <ListItemText primary={manu.title} />
               </NavLink>
 
             </Grid>
           ))}
-         
+
         </Grid>
         <Button
-            startIcon={<LogoutIcon/>}
-              variant="contained"
-              className={classes.logoutBtn}
-              onClick={signoutHanlder}
-            >
-              Logout
-      </Button>
+          startIcon={<LogoutIcon />}
+          variant="contained"
+          className={classes.logoutBtn}
+          onClick={signoutHanlder}
+        >
+          Logout
+        </Button>
       </Drawer>
       <Main open={open} >
         <DrawerHeader />

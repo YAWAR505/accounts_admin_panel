@@ -17,7 +17,7 @@ const Manu = [
     path: paths.getUsersList(),
     title: "Users",
     icon: <GroupIcon />,
-    
+
   },
   {
     path: paths.getCourses(),

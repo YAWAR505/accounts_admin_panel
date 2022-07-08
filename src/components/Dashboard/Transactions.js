@@ -207,7 +207,7 @@ const Transactions = () => {
       <Box mb={2}>
         <Grid container spacing={2}>
           <Grid xs={12} md={3}>
-                          <Widget type="todaysPayment" />
+            <Widget type="todaysPayment" />
           </Grid>
           <Grid xs={12} md={3}>
             <Widget type="sevendaysPayment" />
