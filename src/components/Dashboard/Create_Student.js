@@ -38,9 +38,10 @@ const useStyles = makeStyles(() => ({
   search: {
     marginTop: "10px",
     display: "flex",
-    width: "100%",
+    width: "55%",
     marginBottom: "10px",
-    justifyContent: "space-between",
+    alignItems: "center",
+    float: "right"
   },
   vertItem: {},
 }));
@@ -215,6 +216,7 @@ const Create_Student = () => {
           <TextField
             label="Search By Name"
             variant="outlined"
+            size="small"
             value={q}
             fullWidth
             onChange={handleSearch}
@@ -225,6 +227,7 @@ const Create_Student = () => {
           <TextField
             label="Search by Class"
             variant="outlined"
+            size="small"
             value={search}
             fullWidth
             select

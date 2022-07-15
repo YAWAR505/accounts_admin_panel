@@ -37,29 +37,34 @@ const useStyles = makeStyles(() => ({
     textAlign: "center",
   },
   csvFile: {
-    width: "15%",
     textDecoration: "none",
-    display: "flex",
-    justifyContent: " space-around",
     color: "#fff",
-    marginTop: "10px",
     backgroundColor: "blue",
     padding: "10px 0",
     borderRadius: "5px",
+    "&:hover": {
+      textDecoration: "none",
+      color: "#fff",
+    },
   },
   csvFileParent: {
     display: "flex",
-    justifyContent: "space-between",
-    width: "99%",
+    width: "100%",
+    justifyContent: "flex-end",
+    textAlign: "center"
+
   },
+
   typo: {
     marginLeft: "10px",
   },
   search: {
     margin: "10px 0",
-    width: "100%",
+    width: "50%",
     display: "flex",
-    justifyContent: "space-between",
+    alignItems: "center",
+    float: "right"
+
   },
   pdfButton: {
     color: "#dc5151",
@@ -201,7 +206,7 @@ const Transactions = () => {
     });
     setFilteredData(dateValues);
   };
-  const styles = { width: 900 };
+  const styles = { width: 250 };
   return (
     <Box mt={2}>
       <Box mb={2}>
@@ -220,22 +225,12 @@ const Transactions = () => {
           </Grid>
         </Grid>
       </Box>
-      <div className={classes.csvFileParent}>
-        <Box display="flex" alignItems="center" className={classes.typo}>
-          <Typography variant="h5"> Transactions </Typography>
-        </Box>
-        <CSVLink
-          data={transactions}
-          filename="students.csv"
-          target="_blank"
-          className={classes.csvFile}
-        >
-          Export CSV
-        </CSVLink>
-      </div>
+      <Box display="flex" alignItems="center" className={classes.typo}>
+        <Typography variant="h5"> Transactions </Typography>
+      </Box>
 
       <Grid container spacing={2} className={classes.search}>
-        <Grid item md={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <DateRangePicker
             size="lg"
             placeholder="Filter by Date"
@@ -243,15 +238,27 @@ const Transactions = () => {
             onChange={hanldeDateChange}
           />
         </Grid>
-        <Grid item md={6} xs={12}>
+        <Grid item md={4} xs={12}>
           <TextField
             label="Search By Name"
             variant="outlined"
             size="small"
-            fullWidth
             value={q}
             onChange={handleSearch}
           />
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <div className={classes.csvFileParent}>
+            <CSVLink
+              data={transactions}
+              filename="students.csv"
+              target="_blank"
+              style={styles}
+              className={classes.csvFile}
+            >
+              Export CSV
+            </CSVLink>
+          </div>
         </Grid>
       </Grid>
 

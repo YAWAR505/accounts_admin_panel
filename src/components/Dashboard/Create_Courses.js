@@ -45,10 +45,16 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     justifyContent: " space-around",
     color: "#fff",
-    marginTop: "10px",
     backgroundColor: "blue",
     padding: "10px 0",
     borderRadius: "5px",
+    marginLeft: "10px",
+    marginRight: "10px",
+
+    "&:hover": {
+      textDecoration: "none",
+      color: "#fff",
+    },
   },
   csvFileParent: {
     display: "flex",
@@ -59,8 +65,14 @@ const useStyles = makeStyles(() => ({
     marginLeft: "10px",
   },
   search: {
+    width: "50%",
+    display: "flex",
     marginTop: "10px",
     marginBottom: "15px",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    float: "right"
+
   },
   vertItem: {
     display: "flex",
@@ -228,6 +240,17 @@ const Create_Courses = () => {
           </IconButton>
         </Box>
 
+
+      </div>
+      <Box className={classes.search}>
+
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          value={q}
+          onChange={handleSearch}
+        />
         <CSVLink
           data={data}
           filename="students.csv"
@@ -236,15 +259,6 @@ const Create_Courses = () => {
         >
           Export CSV
         </CSVLink>
-      </div>
-      <Box className={classes.search}>
-        {/* <RangePicker onDateChanges={onDateChanges} /> */}
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={q}
-          onChange={handleSearch}
-        />
       </Box>
       <Paper elevation={3}>
         <DataTable

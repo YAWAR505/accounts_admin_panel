@@ -5,23 +5,26 @@ import {
   Bar,
   YAxis,
   XAxis,
-  CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   Legend,
-  Scatter,
   Line,
-  Area,
-
+  Cell
 } from "recharts";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../../../firebase";
-import moment from "moment";
+import { scaleOrdinal } from "d3-scale";
+import { schemeCategory10 } from "d3-scale-chromatic";
 
+const colors = scaleOrdinal(schemeCategory10).range();
 
 const Charts = ({ aspect, title }) => {
   const [transactions, setTransactions] = useState([])
+  transactions.sort((a, b) => {
+    return a.rollNo - b.rollNo
+  })
+
   console.log(transactions);
   useEffect(() => {
     const q = query(collection(db, "Students"), orderBy("timestamp", "desc"));
@@ -67,6 +70,7 @@ const Charts = ({ aspect, title }) => {
   console.log(findOcc(transactions, key))
   return (
     <div className="chart">
+
       <div className="title">{title}</div>
       {!transactions && <div>Loading...</div>}
       <ResponsiveContainer width="100%" aspect={aspect}>
@@ -74,15 +78,21 @@ const Charts = ({ aspect, title }) => {
           width={730}
           height={250}
           data={findOcc(transactions, key)}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
         >
           {/* <CartesianGrid stroke="#ccc" /> */}
-          <Bar dataKey="Students" fill="green" barSize={40} />
+          <Bar dataKey="Students" fill="#8884d8"
+            barSize={30} label={{ position: "top" }}
+          >
+            {transactions.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+            ))}
+          </Bar>
           <XAxis dataKey="ClassName" />
           <YAxis
-
+            label={{ value: "No Of Students", angle: -90, position: "insideLeft" }}
           />
-          {/* <Line type="monotone" dataKey="Amount" stroke="#ff7300" /> */}
+          <Line type="monotone" dataKey="Students" stroke="#ff7300" />
 
           <Tooltip />
           <Legend />
@@ -94,13 +104,7 @@ const Charts = ({ aspect, title }) => {
 };
 
 export default Charts;
-// const arr = [
-//   { name: "mohammad", feetype: "admission", id: 1 },
-//   { name: "mohammad", feetype: "admission", id: 2 },
-//   { name: "sajad ", feetype: "monthly", id: 3 },
-//   { name: "xyz", feetype: "admission", id: 4 },
-//   { name: "xyz", feetype: "monthly", id: 5 },
-// ]
+
 
 
 

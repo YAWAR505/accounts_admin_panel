@@ -203,6 +203,8 @@ const UsersList = () => {
           <TextField
             label="Search By Name"
             variant="outlined"
+            size="small"
+
             value={q}
             fullWidth
             onChange={handleSearch}

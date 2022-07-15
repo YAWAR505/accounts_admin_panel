@@ -10,18 +10,19 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import LogoutIcon from '@mui/icons-material/Logout';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Manu from "./Manu-items/Manu_Items";
-import { Button, Grid, makeStyles } from "@material-ui/core";
+import { Button, Grid, makeStyles, Tooltip } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { logoutInitiate } from "../redux/Action";
 import { paths } from "./Routes/paths";
 import swal from "sweetalert";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Setting from "./Constants/Setting"
+import LogOut from "./Constants/LogOut";
+
 const drawerWidth = 280;
 const usestyles = makeStyles(() => ({
   navlink: {
@@ -111,25 +112,6 @@ const Create_Drawer = () => {
     setOpen(false);
   };
 
-  const signoutHanlder = () => {
-    swal({
-      title: "Would you Want to log out?",
-      text: "Once you log out , you will  be perminantly logged out !",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        dispatch(logoutInitiate());
-        navigate(paths.getLogin());
-        swal(" Log Out successfully !", {
-          icon: "success",
-        });
-      } else {
-        swal("You are not logged Out!");
-      }
-    });
-  };
   let activeStyle = {
     color: "#2ebf30",
     textDecoration: "none",
@@ -139,7 +121,7 @@ const Create_Drawer = () => {
       <AppBar position="fixed" open={open}>
         <Toolbar
           sx={{
-            backgroundColor: "#242426",
+            backgroundColor: "#121212",
           }}
         >
           {open ? (
@@ -161,9 +143,7 @@ const Create_Drawer = () => {
             <Typography variant="h6" noWrap>
               Dashboard
             </Typography>
-            <IconButton size="large">
-              <AccountCircleIcon sx={{ fontSize: 40 }} color="primary" />
-            </IconButton>
+            <Setting />
           </Box>
         </Toolbar>
       </AppBar>
@@ -177,7 +157,7 @@ const Create_Drawer = () => {
             flexDirection: 'column',
             padding: "40px 0",
             justifyContent: 'space-between',
-            backgroundColor: "#242426",
+            backgroundColor: "#121212",
             width: drawerWidth,
             boxSizing: "border-box",
           },
@@ -208,14 +188,7 @@ const Create_Drawer = () => {
           ))}
 
         </Grid>
-        <Button
-          startIcon={<LogoutIcon />}
-          variant="contained"
-          className={classes.logoutBtn}
-          onClick={signoutHanlder}
-        >
-          Logout
-        </Button>
+        <LogOut classes={classes} />
       </Drawer>
       <Main open={open} >
         <DrawerHeader />
