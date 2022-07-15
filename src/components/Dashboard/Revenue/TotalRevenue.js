@@ -19,13 +19,12 @@ import { schemeCategory10 } from "d3-scale-chromatic";
 
 const colors = scaleOrdinal(schemeCategory10).range();
 
-const Charts = ({ aspect, title }) => {
+const Charts = ({ aspect, title, classes }) => {
   const [transactions, setTransactions] = useState([])
   transactions.sort((a, b) => {
     return a.rollNo - b.rollNo
   })
 
-  console.log(transactions);
   useEffect(() => {
     const q = query(collection(db, "Students"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -67,13 +66,12 @@ const Charts = ({ aspect, title }) => {
     return arr2
   }
   let key = "ClassName"
-  console.log(findOcc(transactions, key))
   return (
     <div className="chart">
 
       <div className="title">{title}</div>
       {!transactions && <div>Loading...</div>}
-      <ResponsiveContainer width="100%" aspect={aspect}>
+      <ResponsiveContainer width="100%" aspect={aspect} >
         <ComposedChart
           width={730}
           height={250}

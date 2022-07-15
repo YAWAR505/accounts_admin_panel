@@ -32,6 +32,7 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     margin: "10px 0",
     width: "100%",
+    clear: "both"
   },
   daterange: {
     textAlign: "center",
@@ -63,7 +64,8 @@ const useStyles = makeStyles(() => ({
     width: "50%",
     display: "flex",
     alignItems: "center",
-    float: "right"
+    float: "right",
+    clear: "both"
 
   },
   pdfButton: {
@@ -209,25 +211,23 @@ const Transactions = () => {
   const styles = { width: 250 };
   return (
     <Box mt={2}>
-      <Box mb={2}>
-        <Grid container spacing={2}>
-          <Grid xs={12} md={3}>
-            <Widget type="todaysPayment" />
-          </Grid>
-          <Grid xs={12} md={3}>
-            <Widget type="sevendaysPayment" />
-          </Grid>
-          <Grid xs={12} md={3}>
-            <Widget type="monthPayment" />
-          </Grid>
-          <Grid xs={12} md={3}>
-            <Widget type="TotalPayment" />
-          </Grid>
+      <Typography variant="h5"> Transactions </Typography>
+
+      <Grid container >
+        <Grid xs={12} md={3}>
+          <Widget type="todaysPayment" />
         </Grid>
-      </Box>
-      <Box display="flex" alignItems="center" className={classes.typo}>
-        <Typography variant="h5"> Transactions </Typography>
-      </Box>
+        <Grid xs={12} md={3}>
+          <Widget type="sevendaysPayment" />
+        </Grid>
+        <Grid xs={12} md={3}>
+          <Widget type="monthPayment" />
+        </Grid>
+        <Grid xs={12} md={3}>
+          <Widget type="TotalPayment" />
+        </Grid>
+      </Grid>
+
 
       <Grid container spacing={2} className={classes.search}>
         <Grid item md={4} xs={12}>
@@ -262,7 +262,7 @@ const Transactions = () => {
         </Grid>
       </Grid>
 
-      <Paper elevation={3}>
+      <Paper elevation={3} style={{ marginTop: "10px" }}>
         <DataTable
           columns={columns}
           data={FilteredData}
