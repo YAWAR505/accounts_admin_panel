@@ -146,8 +146,7 @@ const AccountMenu = () => {
                             <ListItemIcon
 
                             >
-                                <Logout fontSize="small"
-                                />
+                                <Logout fontSize="small" />
                             </ListItemIcon>
                             Logout
                         </MenuItem>
