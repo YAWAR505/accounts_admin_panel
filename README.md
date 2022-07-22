@@ -1,7 +1,3 @@
-# Demo link is below
-
-https://admin-panel-a3f1f.web.app/
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -9,6 +5,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `Demo link is below`
+
+https://admin-panel-a3f1f.web.app/
 
 ### `npm start`
 

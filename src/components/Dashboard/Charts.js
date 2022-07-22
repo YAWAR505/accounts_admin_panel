@@ -26,6 +26,7 @@ const Charts = () => {
         <Grid xs={12} md={3}>
           <Widget type="sevendaysPayment" />
         </Grid>
+
         <Grid xs={12} md={3}>
           <Widget type="monthPayment" />
         </Grid>
